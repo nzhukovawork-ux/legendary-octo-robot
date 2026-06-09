@@ -1,0 +1,3161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pareo — Help & Resources Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  /* ============================================================
+     ClarisHealth Design System Tokens — bound, never hardcoded
+     ============================================================ */
+  :root {
+    --font-family: "Roboto", system-ui, -apple-system, sans-serif;
+
+    /* Font sizes */
+    --body-font-small: 12px;
+    --body-font-medium: 14px;
+    --heading-font-medium: 14px;
+    --heading-font-large: 16px;
+    --heading-font-xxlarge: 20px;
+    --button-font-medium: 14px;
+
+    /* Line heights */
+    --body-line-height-small: 16px;
+    --body-line-height-medium: 20px;
+    --heading-line-height-medium: 20px;
+    --heading-line-height-large: 24px;
+    --heading-line-height-xxlarge: 26px;
+    --button-line-height-medium: 20px;
+
+    /* Font weights */
+    --weight-regular: 400;
+    --weight-medium: 500;
+    --weight-bold: 700;
+
+    /* Spacing scale */
+    --spacing-0: 0px;
+    --spacing-1: 2px;
+    --spacing-2: 4px;
+    --spacing-3: 6px;
+    --spacing-4: 8px;
+    --spacing-5: 12px;
+    --spacing-6: 16px;
+    --spacing-7: 20px;
+    --spacing-8: 24px;
+    --spacing-9: 32px;
+    --spacing-11: 48px;
+
+    /* Radius */
+    --radius-none: 0;
+    --radius-sm: 4px;
+    --radius-l: 8px;
+    --radius-xl: 12px;
+    --radius-full: 999px;
+
+    /* Border */
+    --border-size-sm: 1px;
+
+    /* Semantic — text */
+    --text-neutral-primary: #14181a;
+    --text-neutral-secondary: #595e6e;
+    --text-neutral-placeholder: #6f768b;
+    --text-neutral-on-color: #ffffff;
+    --text-danger-primary: #dc3545;
+
+    /* Semantic — background */
+    --background-neutral-primary: #ffffff;
+    --background-neutral-secondary: #f6f6f6;
+    --background-neutral-strong: #595e6e;
+    --background-success-primary: #25863b;
+    --background-interactive-weak: #ebf5ff;
+    --background-brand-primary: #188192;
+
+    /* Semantic — foreground / borders */
+    --foreground-interactive-primary: #0062cc;
+    --foreground-neutral-primary: #595e6e;
+    --foreground-neutral-primary-hover: #414550;
+    --foreground-neutral-primary-pressed: #14181a;
+    --foreground-danger-primary: #dc3545;
+    --border-neutral-primary: #e5e5e6;
+    --border-neutral-secondary: #a5a9b6;
+    --border-neutral-strong: #6f768b;
+    --border-interactive-primary: #0062cc;
+    --border-interactive-weak: #d8e6fc;
+    --border-danger-primary: #dc3545;
+    --border-danger-primary-hover: #b42532;
+
+    /* Additional background variants needed by inputs / menu items */
+    --background-neutral-primary-hover: #f6f6f6;
+    --text-neutral-disabled: #868c9d;
+    --text-interactive-primary: #0062cc;
+    --border-size-md: 2px;
+
+    /* Sidebar component */
+    --sidebar-background-primary: #3a3f51;
+    --sidebar-background-active: #2b3145;
+    --sidebar-background-reversed: #ffffff;
+    --sidebar-text-primary: #a5a9b6;
+    --sidebar-text-active: #ffffff;
+    --sidebar-foreground-primary: #6f768b;
+    --sidebar-foreground-active: #00cfff;
+    --sidebar-foreground-reversed: #ffffff;
+    --sidebar-border: #111112;
+
+    /* Buttons */
+    --button-primary-bg: #0062cc;
+    --button-primary-bg-hover: #0052a8;
+    --button-primary-text: #ffffff;
+    --button-outline-primary-bg: #ffffff;
+    --button-outline-primary-text: #0062cc;
+    --button-outline-primary-border: #0062cc;
+    --button-outline-secondary-bg: #ffffff;
+    --button-outline-secondary-text: #595e6e;
+    --button-outline-secondary-border: #a5a9b6;
+    --button-outline-danger-bg: #ffffff;
+    --button-outline-danger-text: #dc3545;
+
+    /* Focus rings */
+    --focus-ring: 4px;
+    --focus-ring-danger: #e6939b;
+    --focus-ring-primary: rgba(0, 98, 204, 0.35);
+
+    /* Derived (kept in tokens block) */
+    --background-danger-weak: #fdecee;
+    --help-fab-background: #188192;
+
+    /* Pareo brand logo (two-tone — used only in the sidebar brand glyph) */
+    --pareo-logo-dark: #0a4d7a;
+    --pareo-logo-cyan: #00cfff;
+
+    /* Elevation */
+    --elevation-hard:
+      0 4px 6px 0 rgba(48, 48, 48, 0.09),
+      0 -4px 6px 0 rgba(48, 48, 48, 0.06);
+    --elevation-modal: 0 12px 32px 0 rgba(20, 24, 26, 0.18);
+
+    /* Layout sizes */
+    --sidebar-width: 205px;
+    --icon-size-sm: 16px;
+    --icon-size-md: 24px;
+    --empty-icon-size: 36px;
+    --user-avatar-size: 36px;
+    --logo-size: 32px;
+    --touch-target: 44px;
+  }
+
+  /* ============================================================ */
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-family);
+    font-size: var(--body-font-medium);
+    line-height: var(--body-line-height-medium);
+    color: var(--text-neutral-primary);
+    background: var(--background-neutral-secondary);
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  button { font-family: inherit; cursor: pointer; }
+  input, textarea, select { font-family: inherit; }
+  a { color: inherit; text-decoration: none; }
+
+  /* ============================================================
+     App shell — sidebar (205px) + main content
+     ============================================================ */
+  .app {
+    display: grid;
+    grid-template-columns: var(--sidebar-width) 1fr;
+    min-height: 100vh;
+    background: var(--background-neutral-secondary);
+  }
+
+  /* ============================================================
+     Sidebar (dark navy, 205px wide)
+     ============================================================ */
+  .sidebar {
+    background: var(--sidebar-background-primary);
+    color: var(--sidebar-text-primary);
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--sidebar-background-active) transparent;
+  }
+  .sidebar::-webkit-scrollbar { width: 6px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--sidebar-background-active); }
+
+  /* Brand */
+  .sidebar-brand {
+    padding: var(--spacing-7) var(--spacing-6);
+    display: flex; align-items: center; gap: var(--spacing-4);
+    position: relative;
+    background: var(--sidebar-background-primary);
+  }
+  .sidebar-brand-logo {
+    width: 34px; height: 34px;
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .sidebar-brand-logo .pareo-logo-dark { fill: var(--pareo-logo-dark); }
+  .sidebar-brand-logo .pareo-logo-cyan { fill: var(--pareo-logo-cyan); }
+  .sidebar-brand-name {
+    color: var(--sidebar-text-active);
+    font-size: var(--heading-font-xxlarge);
+    line-height: var(--heading-line-height-xxlarge);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.2px;
+  }
+  .sidebar-collapse {
+    position: absolute;
+    right: -12px;
+    top: var(--spacing-9);
+    width: 24px; height: 24px;
+    border-radius: var(--radius-full);
+    background: var(--sidebar-background-reversed);
+    border: var(--border-size-sm) solid var(--border-neutral-primary);
+    color: var(--foreground-neutral-primary);
+    display: grid; place-items: center;
+    z-index: 2;
+    cursor: pointer;
+  }
+  .sidebar-collapse:focus-visible {
+    outline: 0;
+    box-shadow: 0 0 0 var(--focus-ring) var(--focus-ring-primary);
+  }
+
+  /* User stamp */
+  .sidebar-user {
+    display: flex; align-items: center; gap: var(--spacing-4);
+    height: 80px;
+    padding: var(--spacing-7) var(--spacing-6);
+    border-top: var(--border-size-sm) solid var(--sidebar-border);
+    border-bottom: var(--border-size-sm) solid var(--sidebar-border);
+    background: var(--sidebar-background-primary);
+  }
+  .sidebar-user-avatar {
+    width: var(--user-avatar-size); height: var(--user-avatar-size);
+    border-radius: var(--radius-full);
+    background: var(--sidebar-foreground-primary);
+    display: grid; place-items: center;
+    color: var(--sidebar-text-active);
+    flex-shrink: 0;
+  }
+  .sidebar-user-meta { display: flex; flex-direction: column; flex: 1; min-width: 0; gap: 1px; }
+  .sidebar-user-name {
+    color: var(--sidebar-text-active);
+    font-size: var(--body-font-small);
+    line-height: var(--body-line-height-small);
+    font-weight: var(--weight-medium);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .sidebar-user-role {
+    color: var(--sidebar-text-primary);
+    font-size: var(--body-font-small);
+    line-height: var(--body-line-height-small);
+  }
+  .sidebar-user-caret {
+    width: 24px; height: 24px;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    border: 0;
+    color: var(--sidebar-text-active);
+    display: grid; place-items: center;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .sidebar-user-caret:hover { background: var(--sidebar-background-active); }
+
+  /* Footer strip — matches DS: Category=Footer Strip, State=Expanded */
+  .sidebar-footer {
+    background: var(--sidebar-background-primary);
+    color: var(--sidebar-foreground-primary);
+    font-size: var(--body-font-small);
+    line-height: var(--body-line-height-small);
+    padding: var(--spacing-5) var(--spacing-6);
+    border-top: var(--border-size-sm) solid var(--sidebar-border);
+    margin-top: auto;
+    flex-shrink: 0;
+  }
+
+  /* Nav */
+  .sidebar-nav { display: flex; flex-direction: column; padding: var(--spacing-0) 0; flex: 1; }
+  .nav-item {
+    position: relative;
+    display: flex; align-items: center;
+    gap: var(--spacing-4);
+    padding: var(--spacing-4) var(--spacing-6);
+    color: var(--sidebar-text-primary);
+    font-size: var(--body-font-small);
+    line-height: var(--body-line-height-small);
+    cursor: pointer;
+    background: var(--sidebar-background-primary);
+    transition: background-color 150ms ease, color 150ms ease;
+    min-height: 40px;
+  }
+  .nav-item .nav-icon {
+    width: var(--icon-size-md); height: var(--icon-size-md);
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--sidebar-text-primary);
+    flex-shrink: 0;
+  }
+  .nav-item .nav-icon svg { width: 18px; height: 18px; }
+  .nav-item .nav-label {
+    flex: 1; min-width: 0;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  /* Expand toggle: square box with + / − */
+  .nav-expand {
+    width: 18px; height: 18px;
+    border-radius: var(--radius-sm);
+    border: var(--border-size-sm) solid var(--sidebar-foreground-primary);
+    color: var(--sidebar-text-primary);
+    background: transparent;
+    display: grid; place-items: center;
+    flex-shrink: 0;
+    padding: 0;
+    cursor: pointer;
+  }
+  .nav-expand svg { width: 10px; height: 10px; }
+  .nav-expand:hover { border-color: var(--sidebar-text-active); color: var(--sidebar-text-active); }
+  .nav-item:hover { color: var(--sidebar-text-active); }
+  .nav-item:hover .nav-icon { color: var(--sidebar-text-active); }
+
+  /* Expanded top-level item (Administration) */
+  .nav-item.expanded {
+    color: var(--sidebar-text-active);
+    font-weight: var(--weight-bold);
+  }
+  .nav-item.expanded .nav-icon { color: var(--sidebar-foreground-active); }
+
+  /* Sub-menu (first level under expanded top item) */
+  .nav-sub {
+    background: var(--sidebar-background-active);
+    display: flex; flex-direction: column;
+  }
+  .nav-sub-item {
+    position: relative;
+    padding: var(--spacing-4) var(--spacing-6) var(--spacing-4) var(--spacing-9);
+    color: var(--sidebar-text-primary);
+    font-size: var(--body-font-small);
+    line-height: var(--body-line-height-small);
+    cursor: pointer;
+    display: flex; align-items: center; gap: var(--spacing-4);
+    min-height: 36px;
+    background: var(--sidebar-background-active);
+  }
+  .nav-sub-item .nav-sub-label { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .nav-sub-item:hover { color: var(--sidebar-text-active); }
+  .nav-sub-item.expanded { color: var(--sidebar-text-active); font-weight: var(--weight-bold); }
+
+  /* Deepest level (leaves) — even darker, dash bullet */
+  .nav-leaf {
+    position: relative;
+    padding: var(--spacing-3) var(--spacing-6) var(--spacing-3) var(--spacing-11);
+    color: var(--sidebar-text-primary);
+    font-size: var(--body-font-small);
+    line-height: var(--body-line-height-small);
+    cursor: pointer;
+    display: flex; align-items: center; gap: var(--spacing-3);
+    min-height: 32px;
+    background: var(--sidebar-background-active);
+  }
+  .nav-leaf::before {
+    content: "-";
+    color: var(--sidebar-text-primary);
+    width: 8px; text-align: center;
+    flex-shrink: 0;
+  }
+  .nav-leaf:hover { color: var(--sidebar-text-active); }
+  .nav-leaf.selected {
+    color: var(--sidebar-text-active);
+    font-weight: var(--weight-bold);
+  }
+  .nav-leaf.selected::before { color: var(--sidebar-text-active); }
+  /* Cyan accent rail on the very left edge of the selected leaf */
+  .nav-leaf.selected::after {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--sidebar-foreground-active);
+  }
+
+  /* ============================================================
+     Main content area — gray padding, white card inside
+     ============================================================ */
+  .main {
+    padding: var(--spacing-9);
+    background: var(--background-neutral-secondary);
+    min-height: 100vh;
+  }
+  .content-card {
+    background: var(--background-neutral-primary);
+    border-radius: var(--radius-l);
+    padding: var(--spacing-0) var(--spacing-8) var(--spacing-8);
+    display: flex; flex-direction: column;
+    gap: var(--spacing-8);
+    min-height: calc(100vh - 64px);
+  }
+
+  /* Header + Actions block (with bottom border) */
+  .page-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--spacing-6);
+    padding: var(--spacing-8) var(--spacing-0) var(--spacing-5);
+    border-bottom: var(--border-size-sm) solid var(--border-neutral-primary);
+  }
+  .page-header-text {
+    display: flex; flex-direction: column;
+    gap: var(--spacing-5);
+    flex: 1; min-width: 0;
+  }
+  .breadcrumb {
+    display: flex; align-items: center;
+    gap: var(--spacing-2);
+    font-size: var(--body-font-medium);
+    line-height: var(--body-line-height-medium);
+  }
+  .breadcrumb a { color: var(--text-neutral-secondary); padding: 0 var(--spacing-1); }
+  .breadcrumb a:hover { color: var(--foreground-interactive-primary); }
+  .breadcrumb .sep { color: var(--text-neutral-secondary); width: 12px; text-align: center; }
+  .breadcrumb .current { color: var(--text-neutral-primary); }
+
+  .title-row { display: flex; align-items: center; gap: var(--spacing-5); }
+  .page-title {
+    margin: 0;
+    font-size: var(--heading-font-xxlarge);
+    line-height: var(--heading-line-height-xxlarge);
+    font-weight: var(--weight-bold);
+    color: var(--text-neutral-primary);
+  }
+  .status-badge {
+    display: inline-flex; align-items: center;
+    padding: var(--spacing-2) var(--spacing-4);
+    background: var(--background-success-primary);
+    color: var(--text-neutral-on-color);
+    border-radius: var(--radius-xl);
+    font-size: var(--body-font-small);
+    line-height: var(--body-line-height-small);
+    font-weight: var(--weight-medium);
+  }
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-5) var(--spacing-9);
+    font-size: var(--body-font-medium);
+    line-height: var(--body-line-height-medium);
+  }
+  .meta-item { display: inline-flex; align-items: center; gap: var(--spacing-3); }
+  .meta-title { color: var(--text-neutral-secondary); }
+  .meta-label { color: var(--text-neutral-primary); font-weight: var(--weight-medium); }
+  .page-header-actions { display: flex; gap: var(--spacing-5); flex-shrink: 0; }
+
+  /* ============================================================
+     Tabs — active tab has L/R/T borders + rounded top corners
+     ============================================================ */
+  .tabs-wrap { display: flex; flex-direction: column; gap: var(--spacing-0); }
+  .tabs {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+  }
+  .tab {
+    background: transparent;
+    border: 0;
+    padding: var(--spacing-5) var(--spacing-7);
+    font-size: var(--body-font-medium);
+    line-height: var(--body-line-height-medium);
+    color: var(--text-neutral-secondary);
+    font-weight: var(--weight-regular);
+    border-bottom: var(--border-size-sm) solid var(--border-neutral-primary);
+    cursor: pointer;
+    white-space: nowrap;
+    display: inline-flex; align-items: center; gap: var(--spacing-4);
+  }
+  .tab:hover { color: var(--text-neutral-primary); background: var(--background-neutral-secondary); }
+  .tab.active {
+    color: var(--text-neutral-primary);
+    font-weight: var(--weight-bold);
+    background: var(--background-neutral-primary);
+    border-top: var(--border-size-sm) solid var(--border-neutral-primary);
+    border-left: var(--border-size-sm) solid var(--border-neutral-primary);
+    border-right: var(--border-size-sm) solid var(--border-neutral-primary);
+    border-bottom: 0;
+    border-top-left-radius: var(--radius-l);
+    border-top-right-radius: var(--radius-l);
+    padding-top: calc(var(--spacing-5) - var(--border-size-sm));
+  }
+  .tab:focus-visible {
+    outline: 0;
+    box-shadow: inset 0 0 0 2px var(--foreground-interactive-primary);
+  }
+  .tab-spacer {
+    flex: 1;
+    border-bottom: var(--border-size-sm) solid var(--border-neutral-primary);
+  }
+
+  /* ============================================================
+     Details tab — two-column card grid
+     ============================================================ */
+  .details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-7);
+    padding: var(--spacing-7) var(--spacing-0);
+  }
+  .details-card {
+    background: var(--background-neutral-primary);
+    border: var(--border-size-sm) solid var(--border-neutral-primary);
+    border-radius: var(--radius-l);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .details-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-5) var(--spacing-6);
+    border-bottom: var(--border-size-sm) solid var(--border-neutral-primary);
+  }
+  .details-card-title {
+    margin: 0;
+    font-size: var(--heading-font-large);
+    line-height: var(--heading-line-height-large);
+    font-weight: var(--weight-bold);
+    color: var(--text-neutral-primary);
+  }
+  .details-edit-btn {
+    width: 32px; height: 32px;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    border: 0;
+    color: var(--foreground-neutral-primary);
+    display: grid; place-items: center;
+    cursor: pointer;
+    transition: background-color 150ms ease, color 150ms ease;
+  }
+  .details-edit-btn:hover {
+    background: var(--background-neutral-secondary);
+    color: var(--text-neutral-primary);
+  }
+  .details-edit-btn:focus-visible {
+    outline: 0;
+    box-shadow: 0 0 0 var(--focus-ring) var(--focus-ring-primary);
+  }
+  .details-rows { display: flex; flex-direction: column; }
+  .details-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-5);
+    padding: var(--spacing-4) var(--spacing-6);
+    border-bottom: var(--border-size-sm) solid var(--border-neutral-primary);
+    font-size: var(--body-font-medium);
+    line-height: var(--body-line-height-medium);
+  }
+  .details-row:last-child { border-bottom: 0; }
+  .details-row-label {
+    color: var(--text-neutral-secondary);
+    flex-shrink: 0;
+  }
+  .details-row-value {
+    color: var(--text-neutral-primary);
+    font-weight: var(--weight-medium);
+    text-align: right;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 60%;
+  }
+  .details-row-value.empty {
+    color: var(--text-neutral-placeholder);
+    font-weight: var(--weight-regular);
+  }
+  .details-row-value.danger {
+    color: var(--text-danger-primary);
+    font-weight: var(--weight-medium);
+  }
+
+  /* ============================================================
+     Wider drawer variant + sectioned form + toggle + cleared input
+     ============================================================ */
+  .drawer.drawer--wide { width: min(720px, 96vw); }
+
+  .drawer-section { display: flex; flex-direction: column; gap: var(--spacing-5); }
+  .drawer-section + .drawer-section { margin-top: var(--spacing-7); }
+  .drawer-section-title {
+    margin: 0;
+    font-size: var(--heading-font-large);
+    line-height: var(--heading-line-height-large);
+    font-weight: var(--weight-bold);
+    color: var(--text-neutral-primary);
+  }
+  .drawer-section-required {
+    font-size: var(--body-font-small);
+    line-height: var(--body-line-height-small);
+    color: var(--text-neutral-secondary);
+    margin: var(--spacing-1) 0 0;
+  }
+  .drawer-section-required .req-mark { color: var(--text-danger-primary); }
+
+  .field-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-5) var(--spacing-6);
+  }
+  .field-grid-2 .field.full { grid-column: 1 / -1; }
+  @media (max-width: 640px) {
+    .field-grid-2 { grid-template-columns: 1fr; }
+  }
+
+  /* Clearable trigger — X icon on right of select/input */
+  .ds-select-clear {
+    display: none;
+    width: 16px; height: 16px;
+    color: var(--foreground-neutral-primary);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .ds-select-trigger:not(.is-placeholder) .ds-select-clear { display: inline-flex; align-items: center; }
+  .ds-select-clear:hover { color: var(--text-neutral-primary); }
+
+  /* Tooltip-info icon (i with circle) used inline in labels */
+  .label-info {
+    display: inline-flex; vertical-align: middle;
+    width: 14px; height: 14px;
+    color: var(--foreground-neutral-primary);
+    margin-left: var(--spacing-1);
+    cursor: help;
+  }
+
+  /* Toggle (switch) — used for "Include reference claims" */
+  .toggle-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--spacing-6);
+    padding-top: var(--spacing-5);
+    border-top: var(--border-size-sm) solid var(--border-neutral-primary);
+  }
+  .toggle-text { display: flex; flex-direction: column; gap: var(--spacing-1); min-width: 0; }
+  .toggle-title {
+    font-size: var(--body-font-medium);
+    line-height: var(--body-line-height-medium);
+    font-weight: var(--weight-medium);
+    color: var(--text-neutral-primary);
+  }
+  .toggle-helper {
+    font-size: var(--body-font-small);
+    line-height: var(--body-line-height-small);
+    color: var(--text-neutral-secondary);
+  }
+  .toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    flex-shrink: 0;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+  }
+  .toggle-switch {
+    position: relative;
+    width: 36px; height: 20px;
+    background: var(--border-neutral-secondary);
+    border-radius: var(--radius-full);
+    transition: background-color 150ms ease;
+  }
+  .toggle-switch::before {
+    content: "";
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 16px; height: 16px;
+    background: var(--background-neutral-primary);
+    border-radius: var(--radius-full);
+    transition: transform 180ms ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  }
+  .toggle[aria-pressed="true"] .toggle-switch {
+    background: var(--button-primary-bg);
+  }
+  .toggle[aria-pressed="true"] .toggle-switch::before {
+    transform: translateX(16px);
+  }
+  .toggle:focus-visible .toggle-switch {
+    box-shadow: 0 0 0 var(--focus-ring) var(--focus-ring-primary);
+  }
+  .toggle-state {
+    font-size: var(--body-font-small);
+    line-height: var(--body-line-height-small);
+    color: var(--text-neutral-secondary);
+    min-width: 24px;
+    text-align: left;
+  }
+
+  @media (max-width: 1024px) {
+    .details-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ============================================================
+     Tab panels (one per tab) + section cards
+     ============================================================ */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .sections {
+    display: flex; flex-direction: column;
+    gap: var(--spacing-8);
+    padding: var(--spacing-8) var(--spacing-0);
+  }
+
+  /* Placeholder panel for tabs that don't have real content yet */
+  .panel-stub {
+    padding: var(--spacing-11) var(--spacing-6);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    gap: var(--spacing-3);
+    color: var(--text-neutral-secondary);
+  }
+  .panel-stub-icon {
+    width: var(--empty-icon-size); height: var(--empty-icon-size);
+    border-radius: var(--radius-l);
+    background: var(--background-neutral-secondary);
+    color: var(--foreground-neutral-primary);
+    display: grid; place-items: center;
+    margin-bottom: var(--spacing-3);
+  }
+  .panel-stub-icon svg { width: var(--icon-size-sm); height: var(--icon-size-sm); }
+  .panel-stub-title {
+    font-size: var(--heading-font-medium);
+    line-height: var(--heading-line-height-medium);
+    font-weight: var(--weight-bold);
+    color: var(--text-neutral-primary);
+  }
+  .panel-stub-body {
+    font-size: var(--body-font-medium);
+    line-height: var(--body-line-height-medium);
+    color: var(--text-neutral-secondary);
+    max-width: 480px;
+  }
+  .section {
+    background: var(--background-neutral-primary);
+    border: var(--border-size-sm) solid var(--border-neutral-primary);
+    border-radius: var(--radius-l);
+    overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .section-header {
+    background: var(--background-neutral-secondary);
+    padding: var(--spacing-5);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-5);
+    cursor: pointer;
+  }
+  .section-title-group {
+    display: flex; align-items: center;
+    gap: var(--spacing-4);
+  }
+  .section-chevron {
+    width: var(--icon-size-sm); height: var(--icon-size-sm);
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--foreground-neutral-primary);
+    transition: transform 200ms ease;
+    flex-shrink: 0;
+  }
+  .section.collapsed .section-chevron { transform: rotate(-90deg); }
+  .section-title {
+    font-size: var(--heading-font-large);
+    line-height: var(--heading-line-height-large);
+    font-weight: var(--weight-bold);
+    color: var(--text-neutral-primary);
+  }
+  .section-body {
+    background: var(--background-neutral-primary);
+    border-top: var(--border-size-sm) solid var(--border-neutral-primary);
+    padding: var(--spacing-8) var(--spacing-5);
+    overflow: hidden;
+    max-height: 1500px;
+    transition: max-height 250ms ease, padding 250ms ease, border 250ms ease;
+  }
+  .section.collapsed .section-body {
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-top-color: transparent;
+  }
+
+  /* Empty state */
+  .empty {
+    display: flex; flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-3) var(--spacing-5);
+    text-align: center;
+  }
+  .empty-icon {
+    width: var(--empty-icon-size); height: var(--empty-icon-size);
+    background: var(--background-interactive-weak);
+    color: var(--foreground-interactive-primary);
+    border-radius: var(--radius-l);
+    display: grid; place-items: center;
+  }
+  .empty-icon svg { width: var(--icon-size-sm); height: var(--icon-size-sm); }
+  .empty-title {
+    font-size: var(--heading-font-medium);
+    line-height: var(--heading-line-height-medium);
+    font-weight: var(--weight-bold);
+    color: var(--text-neutral-primary);
+  }
+  .empty-body {
+    font-size: var(--body-font-medium);
+    line-height: var(--body-line-height-medium);
+    color: var(--text-neutral-secondary);
+    max-width: 640px;
+  }
+
+  /* Item list (replaces empty when items exist) */
+  .item-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--body-font-medium);
+    line-height: var(--body-line-height-medium);
+  }
+  .item-table thead th {
+    text-align: left;
+    padding: var(--spacing-0) var(--spacing-5) var(--spacing-4);
+    color: var(--text-neutral-secondary);
+    font-weight: var(--weight-medium);
+    font-size: var(--body-font-small);
+    line-height: var(--body-line-height-small);
+    border-bottom: var(--border-size-sm) solid var(--border-neutral-primary);
+  }
+  .item-table tbody td {
+    padding: var(--spacing-5);
+    border-bottom: var(--border-size-sm) solid var(--border-neutral-primary);
+    vertical-align: middle;
+    color: var(--text-neutral-primary);
+  }
+  .item-table tbody tr:last-child td { border-bottom: 0; }
+  .item-table tbody tr:hover { background: var(--background-neutral-secondary); }
+  .audit-tag {
+    display: inline-flex; align-items: center;
+    background: var(--foreground-interactive-primary);
+    color: var(--text-neutral-on-color);
+    font-size: var(--body-font-small);
+    line-height: var(--body-line-height-small);
+    font-weight: var(--weight-medium);
+    padding: var(--spacing-1) var(--spacing-4);
+    border-radius: var(--radius-full);
+    margin-right: var(--spacing-2);
+  }
+  .link-cell a { color: var(--foreground-interactive-primary); }
+  .link-cell a:hover { text-decoration: underline; }
+  .actions-cell { display: flex; gap: var(--spacing-2); justify-content: flex-end; }
+
+  /* ============================================================
+     Activity History tab — standalone table panel (no accordion)
+     ============================================================ */
+  .activity-panel {
+    padding: var(--spacing-7) var(--spacing-0);
+    display: flex; flex-direction: column;
+  }
+  .activity-table {
+    width: 100%;
+    border: var(--border-size-sm) solid var(--border-neutral-primary);
+    border-radius: var(--radius-l);
+    overflow: hidden;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  .activity-table thead th {
+    background: var(--background-neutral-secondary);
+    text-align: left;
+    padding: var(--spacing-5) var(--spacing-6);
+    color: var(--text-neutral-secondary);
+    font-weight: var(--weight-medium);
+    font-size: var(--body-font-small);
+    line-height: var(--body-line-height-small);
+    border-bottom: var(--border-size-sm) solid var(--border-neutral-primary);
+  }
+  .activity-table tbody td {
+    padding: var(--spacing-5) var(--spacing-6);
+    border-bottom: var(--border-size-sm) solid var(--border-neutral-primary);
+    vertical-align: middle;
+    color: var(--text-neutral-primary);
+  }
+  .activity-table tbody tr:last-child td { border-bottom: 0; }
+  .activity-table tbody tr:hover { background: var(--background-neutral-secondary); }
+
+  /* ============================================================
+     Activity log — section chip, event cell, action icon swatch
+     ============================================================ */
+  .section-chip {
+    display: inline-flex; align-items: center; gap: var(--spacing-2);
+    padding: var(--spacing-1) var(--spacing-4);
+    background: var(--background-neutral-secondary);
+    color: var(--text-neutral-primary);
+    border: var(--border-size-sm) solid var(--border-neutral-primary);
+    border-radius: var(--radius-full);
+    font-size: var(--body-font-small);
+    line-height: var(--body-line-height-small);
+    font-weight: var(--weight-medium);
+    white-space: nowrap;
+  }
+  .section-chip-dot {
+    width: 6px; height: 6px;
+    border-radius: var(--radius-full);
+    background: var(--foreground-interactive-primary);
+    flex-shrink: 0;
+  }
+  .section-chip[data-section="documents"] .section-chip-dot { background: var(--background-success-primary); }
+  .section-chip[data-section="links"] .section-chip-dot { background: var(--help-fab-background); }
+
+  .event-cell { display: flex; gap: var(--spacing-4); align-items: flex-start; }
+  .event-icon {
+    width: var(--empty-icon-size); height: var(--empty-icon-size);
+    border-radius: var(--radius-l);
+    display: grid; place-items: center;
+    flex-shrink: 0;
+  }
+  .event-icon svg { width: var(--icon-size-sm); height: var(--icon-size-sm); }
+  .event-icon[data-action="add"] {
+    background: var(--background-interactive-weak);
+    color: var(--foreground-interactive-primary);
+  }
+  .event-icon[data-action="edit"] {
+    background: var(--background-neutral-secondary);
+    color: var(--foreground-neutral-primary);
+  }
+  .event-icon[data-action="delete"] {
+    background: var(--background-danger-weak);
+    color: var(--text-danger-primary);
+  }
+  .event-body { display: flex; flex-direction: column; gap: var(--spacing-1); min-width: 0; }
+  .event-action {
+    font-size: var(--body-font-medium);
+    line-height: var(--body-line-height-medium);
+    font-weight: var(--weight-medium);
+    color: var(--text-neutral-primary);
+  }
+  .event-details {
+    font-size: var(--body-font-small);
+    line-height: var(--body-line-height-small);
+    color: var(--text-neutral-secondary);
+    word-break: break-word;
+  }
+  .event-details .diff-old { text-decoration: line-through; color: var(--text-neutral-placeholder); }
+  .event-details .diff-arrow { margin: 0 var(--spacing-2); color: var(--text-neutral-placeholder); }
+  .event-details .diff-new { color: var(--text-neutral-primary); font-weight: var(--weight-medium); }
+
+  /* ============================================================
+     Buttons
+     ============================================================ */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-4);
+    font-size: var(--button-font-medium);
+    line-height: var(--button-line-height-medium);
+    font-weight: var(--weight-medium);
+    padding: var(--spacing-4) var(--spacing-6);
+    border-radius: var(--radius-sm);
+    border: var(--border-size-sm) solid transparent;
+    transition: background-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
+    white-space: nowrap;
+  }
+  .btn:focus-visible {
+    outline: 0;
+    box-shadow: 0 0 0 var(--focus-ring) var(--focus-ring-primary);
+  }
+  .btn--primary { background: var(--button-primary-bg); color: var(--button-primary-text); border-color: var(--button-primary-bg); }
+  .btn--primary:hover { background: var(--button-primary-bg-hover); border-color: var(--button-primary-bg-hover); }
+  .btn--outline-primary { background: var(--button-outline-primary-bg); color: var(--button-outline-primary-text); border-color: var(--button-outline-primary-border); }
+  .btn--outline-primary:hover { background: var(--background-interactive-weak); }
+  .btn--outline-secondary { background: var(--button-outline-secondary-bg); color: var(--button-outline-secondary-text); border-color: var(--button-outline-secondary-border); }
+  .btn--outline-secondary:hover { background: var(--background-neutral-secondary); }
+  .btn--outline-danger { background: var(--button-outline-danger-bg); color: var(--button-outline-danger-text); border-color: var(--button-outline-danger-text); }
+  .btn--outline-danger:hover { background: var(--background-danger-weak); }
+  .btn--outline-danger:focus-visible { box-shadow: 0 0 0 var(--focus-ring) var(--focus-ring-danger); }
+  .btn--icon {
+    padding: var(--spacing-3);
+    background: transparent;
+    border-color: transparent;
+    color: var(--foreground-neutral-primary);
+  }
+  .btn--icon:hover { background: var(--background-neutral-secondary); }
+  .btn--icon.danger { color: var(--text-danger-primary); }
+
+  /* ============================================================
+     Floating: Search dock + Help FAB
+     ============================================================ */
+  .search-dock {
+    position: fixed;
+    left: 50%;
+    bottom: var(--spacing-6);
+    transform: translateX(-50%);
+    z-index: 30;
+  }
+  .search-dock .btn {
+    background: var(--button-primary-bg);
+    color: var(--button-primary-text);
+    border-color: var(--button-primary-bg);
+    box-shadow: var(--elevation-modal);
+    padding: var(--spacing-4) var(--spacing-8);
+  }
+  .search-dock .btn:hover { background: var(--button-primary-bg-hover); }
+
+  .help-fab {
+    position: fixed;
+    right: var(--spacing-7);
+    bottom: var(--spacing-7);
+    width: var(--touch-target);
+    height: var(--touch-target);
+    border-radius: var(--radius-full);
+    background: var(--help-fab-background);
+    color: var(--text-neutral-on-color);
+    border: 0;
+    display: grid; place-items: center;
+    z-index: 30;
+    box-shadow: var(--elevation-modal);
+  }
+  .help-fab:focus-visible {
+    outline: 0;
+    box-shadow: var(--elevation-modal), 0 0 0 var(--focus-ring) var(--focus-ring-primary);
+  }
+
+  /* ============================================================
+     Drawer (Add Note / Document / Link)
+     ============================================================ */
+  .scrim {
+    position: fixed; inset: 0;
+    background: rgba(20, 24, 26, 0.35);
+    opacity: 0; pointer-events: none;
+    transition: opacity 200ms ease;
+    z-index: 40;
+  }
+  .scrim.open { opacity: 1; pointer-events: auto; }
+  .drawer {
+    position: fixed;
+    top: 0; right: 0;
+    height: 100vh;
+    width: min(440px, 92vw);
+    background: var(--background-neutral-primary);
+    box-shadow: var(--elevation-modal);
+    transform: translateX(100%);
+    transition: transform 250ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    display: flex; flex-direction: column;
+    z-index: 50;
+  }
+  .drawer.open { transform: translateX(0); }
+  .drawer-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: var(--spacing-6);
+    padding: var(--spacing-7) var(--spacing-7) var(--spacing-6);
+    border-bottom: var(--border-size-sm) solid var(--border-neutral-primary);
+  }
+  .drawer-title { margin: 0; font-size: var(--heading-font-xxlarge); line-height: var(--heading-line-height-xxlarge); font-weight: var(--weight-bold); color: var(--text-neutral-primary); }
+  .drawer-subtitle { margin: var(--spacing-2) 0 0; font-size: var(--body-font-medium); line-height: var(--body-line-height-medium); color: var(--text-neutral-secondary); }
+  .drawer-actions { display: flex; gap: var(--spacing-4); flex-shrink: 0; }
+  .drawer-body {
+    padding: var(--spacing-7);
+    overflow-y: auto; flex: 1;
+    display: flex; flex-direction: column; gap: var(--spacing-6);
+  }
+  .required-hint { font-size: var(--body-font-small); line-height: var(--body-line-height-small); color: var(--text-neutral-secondary); }
+  .required-hint .req-mark, .field-label .req-mark { color: var(--text-danger-primary); }
+
+  /* ===================================================================
+   * DS Field — Input / Select / Textarea (nodes 3878:2263, 3628:2310, 4690:724)
+   * Anatomy: Label · (Helper) · Control · (Error message)
+   * Body/M (14/20), 8px padding, 1px border, 4px radius
+   * Focus: 2px interactive-primary border + 4px ring
+   * Error: danger border + below-field error message with warning icon
+   * =================================================================== */
+  .field { display: flex; flex-direction: column; gap: var(--spacing-2); }
+  .field-label {
+    font-size: var(--body-font-medium);
+    line-height: var(--body-line-height-medium);
+    font-weight: var(--weight-medium);
+    color: var(--text-neutral-primary);
+  }
+  .field-helper {
+    font-size: var(--body-font-small);
+    line-height: var(--body-line-height-small);
+    color: var(--text-neutral-secondary);
+  }
+  .field-error {
+    display: none;
+    align-items: center;
+    gap: var(--spacing-2);
+    font-size: var(--body-font-small);
+    line-height: var(--body-line-height-small);
+    color: var(--text-danger-primary);
+    margin-top: var(--spacing-1);
+  }
+  .field-error svg { width: 14px; height: 14px; flex-shrink: 0; }
+  .field.invalid .field-error { display: inline-flex; }
+
+  .input, .textarea {
+    width: 100%;
+    border: var(--border-size-sm) solid var(--border-neutral-secondary);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-4);
+    font-size: var(--body-font-medium);
+    line-height: var(--body-line-height-medium);
+    color: var(--text-neutral-primary);
+    background: var(--background-neutral-primary);
+    transition: border-color 150ms ease, box-shadow 150ms ease, background-color 150ms ease;
+  }
+  .input::placeholder, .textarea::placeholder { color: var(--text-neutral-placeholder); }
+  .input:hover:not(:disabled):not(:focus),
+  .textarea:hover:not(:disabled):not(:focus) {
+    border-color: var(--border-neutral-strong);
+  }
+  .input:focus, .textarea:focus {
+    outline: 0;
+    border: var(--border-size-md) solid var(--border-interactive-primary);
+    padding: calc(var(--spacing-4) - 1px); /* keep size stable as border grows */
+    box-shadow: 0 0 0 var(--focus-ring) var(--focus-ring-primary);
+  }
+  .field.invalid .input,
+  .field.invalid .textarea,
+  .field.invalid .ds-select-trigger {
+    border-color: var(--border-danger-primary);
+  }
+  .field.invalid .input:focus,
+  .field.invalid .textarea:focus,
+  .field.invalid .ds-select-trigger:focus {
+    border-color: var(--border-danger-primary);
+    box-shadow: 0 0 0 var(--focus-ring) var(--focus-ring-danger);
+  }
+
+  .textarea { resize: vertical; min-height: 120px; }
+
+  /* ---- DS Select (custom widget — matches Menu Items node 1098:5915) ---- */
+  .ds-select { position: relative; }
+  .ds-select-trigger {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-4);
+    text-align: left;
+    border: var(--border-size-sm) solid var(--border-neutral-secondary);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-4);
+    font-size: var(--body-font-medium);
+    line-height: var(--body-line-height-medium);
+    color: var(--text-neutral-primary);
+    background: var(--background-neutral-primary);
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+    cursor: pointer;
+  }
+  .ds-select-trigger.is-placeholder { color: var(--text-neutral-placeholder); }
+  .ds-select-trigger:hover:not(:disabled):not(:focus) { border-color: var(--border-neutral-strong); }
+  .ds-select-trigger:focus,
+  .ds-select.is-open .ds-select-trigger {
+    outline: 0;
+    border: var(--border-size-md) solid var(--border-interactive-primary);
+    padding: calc(var(--spacing-4) - 1px);
+    box-shadow: 0 0 0 var(--focus-ring) var(--focus-ring-primary);
+  }
+  .ds-select-trigger .ds-select-caret {
+    width: 12px; height: 12px;
+    color: var(--foreground-neutral-primary);
+    transition: transform 150ms ease;
+    flex-shrink: 0;
+  }
+  .ds-select.is-open .ds-select-caret { transform: rotate(180deg); }
+
+  .ds-select-menu {
+    position: absolute;
+    top: calc(100% + var(--spacing-2));
+    left: 0; right: 0;
+    background: var(--background-neutral-primary);
+    border: var(--border-size-sm) solid var(--border-neutral-primary);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--elevation-hard);
+    padding: var(--spacing-2);
+    z-index: 55;
+    display: none;
+    max-height: 280px;
+    overflow-y: auto;
+  }
+  .ds-select.is-open .ds-select-menu { display: block; }
+
+  /* Menu Items (DS node 1098:5915) — bold label, hover = interactive weak bg */
+  .ds-menu-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-4) var(--spacing-6);
+    border-radius: var(--radius-sm);
+    font-size: var(--body-font-medium);
+    line-height: var(--body-line-height-medium);
+    font-weight: var(--weight-bold);
+    color: var(--text-neutral-primary);
+    background: var(--background-neutral-primary);
+    border: var(--border-size-sm) solid transparent;
+    cursor: pointer;
+    transition: background-color 120ms ease, border-color 120ms ease;
+  }
+  .ds-menu-item:hover {
+    background: var(--background-interactive-weak);
+    border-color: var(--border-interactive-weak);
+  }
+  .ds-menu-item:focus-visible {
+    outline: 0;
+    border: var(--border-size-md) solid var(--border-interactive-primary);
+    padding: calc(var(--spacing-4) - 1px) calc(var(--spacing-6) - 1px);
+  }
+  .ds-menu-item.is-selected {
+    background: var(--background-interactive-weak);
+    color: var(--text-interactive-primary);
+  }
+  .ds-menu-item-check {
+    width: 16px; height: 16px;
+    color: var(--foreground-interactive-primary);
+    flex-shrink: 0;
+    visibility: hidden;
+  }
+  .ds-menu-item.is-selected .ds-menu-item-check { visibility: visible; }
+
+  /* ---- Rich text editor toolbar (DS node 4690:724) ---- */
+  .editor-toolbar {
+    display: flex; gap: var(--spacing-3); align-items: center;
+    padding: var(--spacing-3) var(--spacing-4);
+    border: var(--border-size-sm) solid var(--border-neutral-secondary);
+    border-bottom: 0;
+    border-top-left-radius: var(--radius-sm);
+    border-top-right-radius: var(--radius-sm);
+    background: var(--background-neutral-primary);
+  }
+  .field.invalid .editor-toolbar { border-color: var(--border-danger-primary); }
+  .editor-toolbar select {
+    appearance: none;
+    border: var(--border-size-sm) solid var(--border-neutral-primary);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-1) var(--spacing-7) var(--spacing-1) var(--spacing-3);
+    font-size: var(--body-font-small);
+    line-height: var(--body-line-height-small);
+    background: var(--background-neutral-primary)
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'><path fill='%23595e6e' d='M6 8.5 1.5 4h9z'/></svg>")
+      no-repeat right var(--spacing-3) center;
+    color: var(--text-neutral-primary);
+    cursor: pointer;
+  }
+  .editor-toolbar select:hover { border-color: var(--border-neutral-strong); }
+  .editor-toolbar .tb-divider { width: 1px; height: 14px; background: var(--border-neutral-primary); }
+  .editor-toolbar .tb-btn {
+    background: transparent; border: 0;
+    color: var(--foreground-neutral-primary);
+    padding: var(--spacing-1) var(--spacing-2);
+    border-radius: var(--radius-sm);
+    font-size: var(--body-font-medium);
+    line-height: var(--body-line-height-medium);
+    min-width: 24px;
+  }
+  .editor-toolbar .tb-btn:hover {
+    background: var(--background-neutral-primary-hover);
+    color: var(--foreground-neutral-primary-hover);
+  }
+  .editor-textarea { border-top-left-radius: 0; border-top-right-radius: 0; min-height: 140px; }
+  .field.invalid .editor-textarea {
+    /* keep border in sync with toolbar */
+    border-top: 0;
+  }
+
+  .browse-row { display: flex; align-items: center; gap: var(--spacing-5); flex-wrap: wrap; }
+  .file-chip {
+    display: inline-flex; align-items: center; gap: var(--spacing-3);
+    padding: var(--spacing-3) var(--spacing-5);
+    background: var(--background-interactive-weak);
+    color: var(--foreground-interactive-primary);
+    border-radius: var(--radius-full);
+    font-size: var(--body-font-small);
+    line-height: var(--body-line-height-small);
+    font-weight: var(--weight-medium);
+  }
+
+  /* ============================================================
+     Toast
+     ============================================================ */
+  .toast-stack {
+    position: fixed; top: var(--spacing-7); right: var(--spacing-7);
+    z-index: 60;
+    display: flex; flex-direction: column; gap: var(--spacing-4);
+  }
+  .toast {
+    display: flex; align-items: center; gap: var(--spacing-5);
+    background: var(--background-success-primary);
+    color: var(--text-neutral-on-color);
+    padding: var(--spacing-5) var(--spacing-6);
+    border-radius: var(--radius-l);
+    box-shadow: var(--elevation-modal);
+    min-width: 320px;
+    font-size: var(--body-font-medium);
+    line-height: var(--body-line-height-medium);
+    font-weight: var(--weight-medium);
+    transform: translateY(-12px); opacity: 0;
+    animation: toast-in 220ms ease forwards;
+  }
+  .toast.exit { animation: toast-out 220ms ease forwards; }
+  .toast .toast-close {
+    margin-left: auto;
+    background: transparent; border: 0;
+    color: var(--text-neutral-on-color);
+    padding: var(--spacing-1);
+    border-radius: var(--radius-sm);
+  }
+  .toast .toast-close:hover { background: rgba(255,255,255,0.15); }
+  @keyframes toast-in { to { transform: translateY(0); opacity: 1; } }
+  @keyframes toast-out { to { transform: translateY(-12px); opacity: 0; } }
+
+  /* Confirmation modal */
+  .modal-scrim {
+    position: fixed; inset: 0;
+    background: rgba(20, 24, 26, 0.45);
+    display: none; z-index: 70;
+    align-items: center; justify-content: center;
+    padding: var(--spacing-7);
+  }
+  .modal-scrim.open { display: flex; }
+  .modal {
+    background: var(--background-neutral-primary);
+    border-radius: var(--radius-l);
+    box-shadow: var(--elevation-modal);
+    width: min(420px, 100%);
+    overflow: hidden;
+  }
+  .modal-header { padding: var(--spacing-7) var(--spacing-7) var(--spacing-4); }
+  .modal-title { margin: 0; font-size: var(--heading-font-large); line-height: var(--heading-line-height-large); font-weight: var(--weight-bold); }
+  .modal-body { padding: var(--spacing-0) var(--spacing-7) var(--spacing-6); color: var(--text-neutral-secondary); font-size: var(--body-font-medium); line-height: var(--body-line-height-medium); }
+  .modal-footer {
+    display: flex; justify-content: flex-end;
+    gap: var(--spacing-4);
+    padding: var(--spacing-6) var(--spacing-7) var(--spacing-7);
+    background: var(--background-neutral-secondary);
+    border-top: var(--border-size-sm) solid var(--border-neutral-primary);
+  }
+
+  /* Sr-only */
+  .sr-only {
+    position: absolute; width: 1px; height: 1px;
+    padding: 0; margin: -1px; overflow: hidden;
+    clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+  }
+
+  /* ============================================================
+     Responsive
+     ============================================================ */
+  @media (max-width: 1280px) {
+    .meta-row { gap: var(--spacing-5) var(--spacing-7); }
+  }
+  @media (max-width: 1024px) {
+    .app { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .main { padding: var(--spacing-6); }
+    .content-card { padding: 0 var(--spacing-6) var(--spacing-6); }
+    .page-header { flex-direction: column; align-items: stretch; }
+    .page-header-actions { justify-content: flex-start; }
+    .tabs { overflow-x: auto; scrollbar-width: none; }
+    .tabs::-webkit-scrollbar { display: none; }
+  }
+  @media (max-width: 640px) {
+    .main { padding: var(--spacing-5); }
+    .content-card { padding: 0 var(--spacing-5) var(--spacing-5); }
+    .drawer { width: 100vw; }
+    .item-table thead { display: none; }
+    .item-table, .item-table tbody, .item-table tr, .item-table td { display: block; width: 100%; }
+    .item-table tr { padding: var(--spacing-5) 0; border-bottom: var(--border-size-sm) solid var(--border-neutral-primary); }
+    .item-table tbody td { padding: var(--spacing-2) var(--spacing-5); border: 0; }
+    .actions-cell { justify-content: flex-start; padding-top: var(--spacing-4) !important; }
+  }
+</style>
+</head>
+<body>
+  <div class="app">
+
+    <!-- ====== SIDEBAR (matches ClarisHealth DS node 1175:18175) ====== -->
+    <aside class="sidebar" aria-label="Primary navigation">
+
+      <!-- Brand: two-tone Pareo swoosh + wordmark -->
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-logo" aria-hidden="true">
+          <svg width="34" height="34" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Outer dark navy curl -->
+            <path class="pareo-logo-dark" d="M9 4 C18 4, 26 9, 26 18 C26 26, 19 32, 12 34 C18 26, 18 20, 13 16 C10 13, 9 9, 9 4 Z"/>
+            <!-- Inner cyan accent flame -->
+            <path class="pareo-logo-cyan" d="M16 8 C22 9, 25 13, 24 20 C22 26, 17 30, 13 32 C16 25, 17 18, 16 8 Z"/>
+          </svg>
+        </div>
+        <div class="sidebar-brand-name">Pareo</div>
+        <button class="sidebar-collapse" aria-label="Collapse sidebar">
+          <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M10 12 5 8l5-4z"/></svg>
+        </button>
+      </div>
+
+      <!-- User stamp -->
+      <div class="sidebar-user">
+        <div class="sidebar-user-avatar" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="9" r="3.5"/>
+            <path d="M5 20c0-3.5 3-5.5 7-5.5s7 2 7 5.5"/>
+          </svg>
+        </div>
+        <div class="sidebar-user-meta">
+          <span class="sidebar-user-name">Chad Thomas</span>
+          <span class="sidebar-user-role">Administrator</span>
+        </div>
+        <button class="sidebar-user-caret" aria-label="User menu">
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 11 2.5 5.5 3.6 4.4 8 8.8l4.4-4.4 1.1 1.1z"/></svg>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+
+        <!-- Dasboard — speedometer/gauge icon (DS: Icons/Sidebar/Dashboard) -->
+        <a class="nav-item" href="#">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 16a8 8 0 1 1 16 0"/>
+              <line x1="12" y1="16" x2="15.5" y2="10"/>
+              <circle cx="12" cy="16" r="1.2" fill="currentColor"/>
+            </svg>
+          </span>
+          <span class="nav-label">Dasboard</span>
+        </a>
+
+        <!-- Provider Portal — user profile with side bag (DS: Provider Portal) -->
+        <a class="nav-item" href="#">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="10" cy="8" r="3"/>
+              <path d="M4 19c0-3 2.5-5 6-5s6 2 6 5"/>
+              <rect x="17" y="10" width="4" height="6" rx="0.5"/>
+              <path d="M18 10v-1.5a1.5 1.5 0 0 1 3 0V10"/>
+            </svg>
+          </span>
+          <span class="nav-label">Provider Portal</span>
+          <button class="nav-expand" aria-label="Expand"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 2v8M2 6h8"/></svg></button>
+        </a>
+
+        <!-- Provider Clinical — clipboard with magnifying glass (DS: Pareo Clinical) -->
+        <a class="nav-item" href="#">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="4" y="4" width="13" height="16" rx="1.5"/>
+              <path d="M8 4V3h5v1"/>
+              <circle cx="16" cy="16" r="3"/>
+              <path d="m18.2 18.2 2.3 2.3"/>
+            </svg>
+          </span>
+          <span class="nav-label">Provider Clinical</span>
+          <button class="nav-expand" aria-label="Expand"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 2v8M2 6h8"/></svg></button>
+        </a>
+
+        <!-- Relationship Management — handshake (DS: Relationship Management) -->
+        <a class="nav-item" href="#">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 11l3-3 4 4-1 1c-.5.5-1.5.5-2 0L3 11z"/>
+              <path d="M21 11l-3-3-4 4 1 1c.5.5 1.5.5 2 0L21 11z"/>
+              <path d="M10 13l1 1c.5.5 1.5.5 2 0l4-4"/>
+              <path d="M12 14l1 1c.5.5 1.5.5 2 0l1-1"/>
+            </svg>
+          </span>
+          <span class="nav-label">Relationship Mana...</span>
+          <button class="nav-expand" aria-label="Expand"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 2v8M2 6h8"/></svg></button>
+        </a>
+
+        <!-- Work Queue — list/inbox (DS: Work Queue) -->
+        <a class="nav-item" href="#">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="4" y="4" width="16" height="16" rx="1.5"/>
+              <path d="M4 13h4l1.5 2h5L16 13h4"/>
+            </svg>
+          </span>
+          <span class="nav-label">Work Queue</span>
+        </a>
+
+        <!-- My Inventory — assignments / clipboard (DS: Assignments) -->
+        <a class="nav-item" href="#">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="5" width="14" height="16" rx="1.5"/>
+              <path d="M9 5V4h6v1"/>
+              <path d="M8.5 10.5 10 12l2.5-2.5"/>
+              <path d="M14 11h3"/>
+              <path d="M8.5 15.5 10 17l2.5-2.5"/>
+              <path d="M14 16h3"/>
+            </svg>
+          </span>
+          <span class="nav-label">My Inventory</span>
+          <button class="nav-expand" aria-label="Expand"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 2v8M2 6h8"/></svg></button>
+        </a>
+
+        <!-- Concept Management — lightbulb (DS: Concept Management) -->
+        <a class="nav-item" href="#">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3a6 6 0 0 0-4 10.5c.8.7 1 1.5 1 2.5v1h6v-1c0-1 .2-1.8 1-2.5A6 6 0 0 0 12 3z"/>
+              <path d="M10 19h4"/>
+              <path d="M11 22h2"/>
+            </svg>
+          </span>
+          <span class="nav-label">Concept Managem...</span>
+          <button class="nav-expand" aria-label="Expand"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 2v8M2 6h8"/></svg></button>
+        </a>
+
+        <!-- Insights & Analytics — pie chart (DS: Insights & Analytics) -->
+        <a class="nav-item" href="#">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 4a8 8 0 1 0 8 8"/>
+              <path d="M12 4v8h8"/>
+              <path d="M20 12a8 8 0 0 0-8-8"/>
+            </svg>
+          </span>
+          <span class="nav-label">Insights &amp; Analytics</span>
+          <button class="nav-expand" aria-label="Expand"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 2v8M2 6h8"/></svg></button>
+        </a>
+
+        <!-- Extracts — download / tray with arrow (DS: Extracts) -->
+        <a class="nav-item" href="#">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3v11"/>
+              <path d="m8 11 4 4 4-4"/>
+              <path d="M5 18h14v2H5z"/>
+            </svg>
+          </span>
+          <span class="nav-label">Extracts</span>
+        </a>
+
+        <!-- Recovery Posting — cash register (DS: Recovery Posting) -->
+        <a class="nav-item" href="#">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="8" width="18" height="12" rx="1.5"/>
+              <path d="M6 8V5h12v3"/>
+              <path d="M3 13h18"/>
+              <circle cx="16.5" cy="16.5" r="1.2"/>
+            </svg>
+          </span>
+          <span class="nav-label">Recovery Posting</span>
+        </a>
+
+        <!-- Collections — stacked coins (DS: Collections) -->
+        <a class="nav-item" href="#">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <ellipse cx="12" cy="6" rx="7" ry="2.5"/>
+              <path d="M5 6v4c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5V6"/>
+              <path d="M5 12v4c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-4"/>
+            </svg>
+          </span>
+          <span class="nav-label">Collections</span>
+        </a>
+
+        <!-- Update Audits — clipboard check (DS: Update Audits) -->
+        <a class="nav-item" href="#">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="5" width="14" height="16" rx="1.5"/>
+              <path d="M9 5V4h6v1"/>
+              <path d="m9 13 2 2 4-4"/>
+            </svg>
+          </span>
+          <span class="nav-label">Update Audits</span>
+        </a>
+
+        <!-- Update Medical Records — clipboard with plus (DS: Update Medical Records) -->
+        <a class="nav-item" href="#">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="5" width="14" height="16" rx="1.5"/>
+              <path d="M9 5V4h6v1"/>
+              <path d="M12 10v6M9 13h6"/>
+            </svg>
+          </span>
+          <span class="nav-label">Update Medical Records</span>
+        </a>
+
+        <!-- Update Query Results — doc with lines (DS: Update Query Results) -->
+        <a class="nav-item" href="#">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="5" width="14" height="16" rx="1.5"/>
+              <path d="M9 5V4h6v1"/>
+              <path d="M8 10h8M8 13h8M8 16h5"/>
+            </svg>
+          </span>
+          <span class="nav-label">Update Query Results</span>
+        </a>
+
+        <!-- Administration — shield + lock (DS: Administration). Expanded in this state. -->
+        <a class="nav-item expanded" href="#" data-nav="admin">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3 4 6v5c0 5 3.3 8.7 8 10 4.7-1.3 8-5 8-10V6z"/>
+              <rect x="9" y="11" width="6" height="5" rx="1"/>
+              <path d="M10.5 11V9.5a1.5 1.5 0 0 1 3 0V11"/>
+            </svg>
+          </span>
+          <span class="nav-label">Administration</span>
+          <button class="nav-expand" aria-label="Collapse"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 6h8"/></svg></button>
+        </a>
+
+        <!-- Admin sub-tree -->
+        <div class="nav-sub" data-nav-sub="admin">
+          <a class="nav-sub-item" href="#"><span class="nav-sub-label">Security</span></a>
+          <a class="nav-sub-item" href="#">
+            <span class="nav-sub-label">Application Settings</span>
+            <button class="nav-expand" aria-label="Expand"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 2v8M2 6h8"/></svg></button>
+          </a>
+          <a class="nav-sub-item expanded" href="#" data-nav="data-setup">
+            <span class="nav-sub-label">Data Setup</span>
+            <button class="nav-expand" aria-label="Collapse"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 6h8"/></svg></button>
+          </a>
+          <div class="nav-leaves" data-nav-leaves="data-setup">
+            <a class="nav-leaf" href="#">Archiving</a>
+            <a class="nav-leaf" href="#">Automation</a>
+            <a class="nav-leaf selected" href="#">Automation Rules</a>
+            <a class="nav-leaf" href="#">Data Mapping</a>
+            <a class="nav-leaf" href="#">Datasets</a>
+          </div>
+        </div>
+
+        <!-- Org Management — building (DS: Org Management) -->
+        <a class="nav-item" href="#">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 21V5a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v16"/>
+              <path d="M14 11h4a1 1 0 0 1 1 1v9"/>
+              <path d="M3 21h18"/>
+              <path d="M8 8h2M8 11h2M8 14h2M8 17h2"/>
+              <path d="M16 14h1M16 17h1"/>
+            </svg>
+          </span>
+          <span class="nav-label">Org Management</span>
+          <button class="nav-expand" aria-label="Expand"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 2v8M2 6h8"/></svg></button>
+        </a>
+
+        <!-- File Upload — doc with up arrow (DS: File Upload) -->
+        <a class="nav-item" href="#">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 3H7a1.5 1.5 0 0 0-1.5 1.5v15A1.5 1.5 0 0 0 7 21h10a1.5 1.5 0 0 0 1.5-1.5V7.5z"/>
+              <path d="M14 3v4.5h4.5"/>
+              <path d="M12 17v-6"/>
+              <path d="m9.5 13.5 2.5-2.5 2.5 2.5"/>
+            </svg>
+          </span>
+          <span class="nav-label">File Upload</span>
+        </a>
+
+        <!-- Correspondence — pencil writing (DS: Correspondence) -->
+        <a class="nav-item" href="#">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m3 21 1-4L16 5l3 3L7 20z"/>
+              <path d="m14 7 3 3"/>
+              <path d="M18 3l3 3-2 2-3-3z"/>
+            </svg>
+          </span>
+          <span class="nav-label">Correspondence</span>
+          <button class="nav-expand" aria-label="Expand"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 2v8M2 6h8"/></svg></button>
+        </a>
+
+        <!-- Release Notes — doc with edit pen (DS: Release Notes) -->
+        <a class="nav-item" href="#">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 3H7a1.5 1.5 0 0 0-1.5 1.5v15A1.5 1.5 0 0 0 7 21h10a1.5 1.5 0 0 0 1.5-1.5V7.5z"/>
+              <path d="M14 3v4.5h4.5"/>
+              <path d="m9 17 1-3 5-5 2 2-5 5z"/>
+            </svg>
+          </span>
+          <span class="nav-label">Release Notes</span>
+        </a>
+
+        <!-- Fraud, Waste and... — magnifying glass (DS: FWA) -->
+        <a class="nav-item" href="#">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="10.5" cy="10.5" r="6"/>
+              <path d="m15 15 5 5"/>
+              <path d="M8 9.5h5M8 11.5h3"/>
+            </svg>
+          </span>
+          <span class="nav-label">Fraud, Waste and...</span>
+          <button class="nav-expand" aria-label="Expand"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 2v8M2 6h8"/></svg></button>
+        </a>
+
+        <!-- Variance Management — stacked coins with arrow (DS: Variance Management) -->
+        <a class="nav-item" href="#">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <ellipse cx="9" cy="7" rx="5" ry="2"/>
+              <path d="M4 7v3c0 1 2.3 2 5 2s5-1 5-2V7"/>
+              <path d="M4 12v3c0 1 2.3 2 5 2s5-1 5-2v-3"/>
+              <path d="M17 9v8"/>
+              <path d="m14.5 11.5 2.5-2.5 2.5 2.5"/>
+            </svg>
+          </span>
+          <span class="nav-label">Variance Management</span>
+        </a>
+
+        <!-- Pareo University — graduation cap (DS: Pareo University) -->
+        <a class="nav-item" href="#">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m2 9 10-4 10 4-10 4z"/>
+              <path d="M6 11v4c0 1.5 2.7 3 6 3s6-1.5 6-3v-4"/>
+              <path d="M22 9v5"/>
+            </svg>
+          </span>
+          <span class="nav-label">Pareo University</span>
+        </a>
+
+        <!-- Invoicing — doc with dollar (DS: Invoicing) -->
+        <a class="nav-item" href="#">
+          <span class="nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 3H7a1.5 1.5 0 0 0-1.5 1.5v15A1.5 1.5 0 0 0 7 21h10a1.5 1.5 0 0 0 1.5-1.5V7.5z"/>
+              <path d="M14 3v4.5h4.5"/>
+              <path d="M14 13h-3a1.5 1.5 0 0 0 0 3h2a1.5 1.5 0 0 1 0 3h-3"/>
+              <path d="M12 12v8"/>
+            </svg>
+          </span>
+          <span class="nav-label">Invoicing</span>
+        </a>
+      </nav>
+
+      <!-- Footer copyright strip (DS: Footer Strip) -->
+      <div class="sidebar-footer">ClarisHealth © 2026 v8.0.15</div>
+    </aside>
+
+    <!-- ====== MAIN CONTENT ====== -->
+    <main class="main">
+      <div class="content-card">
+
+        <!-- Page header -->
+        <header class="page-header">
+          <div class="page-header-text">
+            <div class="breadcrumb">
+              <a href="#">Queries</a>
+              <span class="sep">/</span>
+              <span class="current">140561638389</span>
+            </div>
+            <div class="title-row">
+              <h1 class="page-title">ASO Provider Specific</h1>
+              <span class="status-badge" aria-label="Status: Active">Active</span>
+            </div>
+            <div class="meta-row" aria-label="Query metadata">
+              <div class="meta-item"><span class="meta-title">Query ID</span><span class="meta-label">140561638389</span></div>
+              <div class="meta-item"><span class="meta-title">Created By</span><span class="meta-label">Chad Thomas</span></div>
+              <div class="meta-item"><span class="meta-title">Date Created</span><span class="meta-label">11/05/2026</span></div>
+              <div class="meta-item"><span class="meta-title">Last Updated</span><span class="meta-label">25/05/2026</span></div>
+            </div>
+          </div>
+          <div class="page-header-actions">
+            <button class="btn btn--outline-danger">Deactivate Query</button>
+          </div>
+        </header>
+
+        <!-- Tabs -->
+        <div class="tabs-wrap">
+          <nav class="tabs" role="tablist" aria-label="Query tabs">
+            <button class="tab" role="tab" data-tab="details">Details</button>
+            <button class="tab" role="tab" data-tab="inventory">Inventory Management</button>
+            <button class="tab" role="tab" data-tab="code">Code Management</button>
+            <button class="tab active" role="tab" data-tab="help" aria-selected="true">Help &amp; Resources</button>
+            <button class="tab" role="tab" data-tab="activity">Activity History</button>
+            <span class="tab-spacer" aria-hidden="true"></span>
+          </nav>
+
+          <!-- Tab panels — only the active one is visible -->
+
+          <!-- Details — Query Details + Rule cards -->
+          <div class="tab-panel" data-tab-panel="details">
+            <div class="details-grid">
+              <!-- Query Details card -->
+              <div class="details-card">
+                <header class="details-card-header">
+                  <h2 class="details-card-title">Query Details</h2>
+                  <button class="details-edit-btn" data-edit-details="query" aria-label="Edit query details">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+                  </button>
+                </header>
+                <div class="details-rows" data-details-rows="query"></div>
+              </div>
+
+              <!-- Rule card -->
+              <div class="details-card">
+                <header class="details-card-header">
+                  <h2 class="details-card-title">Rule</h2>
+                  <button class="details-edit-btn" data-edit-details="rule" aria-label="Edit rule">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+                  </button>
+                </header>
+                <div class="details-rows" data-details-rows="rule"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Inventory Management (stub) -->
+          <div class="tab-panel" data-tab-panel="inventory">
+            <div class="panel-stub">
+              <div class="panel-stub-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="6" width="16" height="14" rx="1.5"/><path d="M9 6V4h6v2"/><path d="M8 11h8M8 15h5"/></svg>
+              </div>
+              <div class="panel-stub-title">Inventory Management</div>
+              <div class="panel-stub-body">Claims and items tagged to this query will be managed from this tab.</div>
+            </div>
+          </div>
+
+          <!-- Code Management (stub) -->
+          <div class="tab-panel" data-tab-panel="code">
+            <div class="panel-stub">
+              <div class="panel-stub-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 17 5 12 9 7"/><polyline points="15 7 19 12 15 17"/></svg>
+              </div>
+              <div class="panel-stub-title">Code Management</div>
+              <div class="panel-stub-body">Diagnosis and procedure codes attached to this query will be listed here.</div>
+            </div>
+          </div>
+
+          <!-- Help & Resources (active) -->
+          <div class="tab-panel active" data-tab-panel="help">
+          <!-- Sections -->
+          <div class="sections">
+
+            <!-- Notes -->
+            <section class="section" data-section="notes">
+              <header class="section-header" role="button" tabindex="0" aria-expanded="true" aria-controls="notes-body">
+                <div class="section-title-group">
+                  <span class="section-chevron" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 5 2.5 10.5 3.6 11.6 8 7.2l4.4 4.4 1.1-1.1z"/></svg>
+                  </span>
+                  <span class="section-title">Notes (<span data-count="notes">0</span>)</span>
+                </div>
+                <button class="btn btn--outline-primary" data-add="notes" aria-label="Add note">Add Note</button>
+              </header>
+              <div class="section-body" id="notes-body">
+                <div class="empty" data-empty="notes">
+                  <div class="empty-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                  </div>
+                  <div class="empty-title">No Notes yet</div>
+                  <div class="empty-body">Notes let your team share guidance on how to work claims tagged to this query.<br>Add a note so auditors can see it while working the claim.</div>
+                </div>
+                <table class="item-table" data-table="notes" style="display:none;">
+                  <thead>
+                    <tr>
+                      <th style="width: 200px">Audit Type</th>
+                      <th>Note</th>
+                      <th style="width: 120px">Date Added</th>
+                      <th style="width: 100px">Added by</th>
+                      <th style="width: 100px"></th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </section>
+
+            <!-- Documents -->
+            <section class="section" data-section="documents">
+              <header class="section-header" role="button" tabindex="0" aria-expanded="true" aria-controls="documents-body">
+                <div class="section-title-group">
+                  <span class="section-chevron" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 5 2.5 10.5 3.6 11.6 8 7.2l4.4 4.4 1.1-1.1z"/></svg>
+                  </span>
+                  <span class="section-title">Documents (<span data-count="documents">0</span>)</span>
+                </div>
+                <button class="btn btn--outline-primary" data-add="documents" aria-label="Add document">Add Document</button>
+              </header>
+              <div class="section-body" id="documents-body">
+                <div class="empty" data-empty="documents">
+                  <div class="empty-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  </div>
+                  <div class="empty-title">No Documents yet</div>
+                  <div class="empty-body">Documents hold reference material for this query.<br>Add a document so auditors have the guidance they need in one place.</div>
+                </div>
+                <table class="item-table" data-table="documents" style="display:none;">
+                  <thead>
+                    <tr>
+                      <th style="width: 200px">Audit Type</th>
+                      <th>Document Name</th>
+                      <th>File Name</th>
+                      <th style="width: 120px">Date Added</th>
+                      <th style="width: 100px">Added by</th>
+                      <th style="width: 100px"></th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </section>
+
+            <!-- Links -->
+            <section class="section" data-section="links">
+              <header class="section-header" role="button" tabindex="0" aria-expanded="true" aria-controls="links-body">
+                <div class="section-title-group">
+                  <span class="section-chevron" aria-hidden="true">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 5 2.5 10.5 3.6 11.6 8 7.2l4.4 4.4 1.1-1.1z"/></svg>
+                  </span>
+                  <span class="section-title">Links (<span data-count="links">0</span>)</span>
+                </div>
+                <button class="btn btn--outline-primary" data-add="links" aria-label="Add link">Add Link</button>
+              </header>
+              <div class="section-body" id="links-body">
+                <div class="empty" data-empty="links">
+                  <div class="empty-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                  </div>
+                  <div class="empty-title">No links yet</div>
+                  <div class="empty-body">Links point to external resources for this query — CMS guidance, other systems, or reference sites.<br>Add a link to connect those resources here.</div>
+                </div>
+                <table class="item-table" data-table="links" style="display:none;">
+                  <thead>
+                    <tr>
+                      <th style="width: 200px">Audit Type</th>
+                      <th>Link</th>
+                      <th style="width: 120px">Date Added</th>
+                      <th style="width: 100px">Added by</th>
+                      <th style="width: 100px"></th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+              </div>
+            </section>
+
+          </div>
+          </div><!-- /tab-panel: help -->
+
+          <!-- Activity History tab — plain table, no accordion wrapper -->
+          <div class="tab-panel" data-tab-panel="activity">
+            <div class="activity-panel">
+              <div class="empty" data-empty="activity" style="display:none;">
+                <div class="empty-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
+                </div>
+                <div class="empty-title">No activity yet</div>
+                <div class="empty-body">When notes, documents, or links are added, edited, or removed for this query, the change will appear here with the user and timestamp.</div>
+              </div>
+              <table class="item-table activity-table" data-table="activity">
+                <thead>
+                  <tr>
+                    <th style="width: 180px">Section</th>
+                    <th>Event</th>
+                    <th style="width: 140px">Date</th>
+                    <th style="width: 120px">User</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div><!-- /tab-panel: activity -->
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ====== Search dock + Help FAB ====== -->
+  <div class="search-dock">
+    <button class="btn" aria-label="Search">
+      Search
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 5 3.5 9.5l1.1 1.1L8 7.2l3.4 3.4 1.1-1.1z"/></svg>
+    </button>
+  </div>
+  <button class="help-fab" aria-label="Help">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+  </button>
+
+  <!-- ====== Drawer scrim + drawers ====== -->
+  <div class="scrim" data-scrim></div>
+
+  <aside class="drawer" data-drawer="notes" role="dialog" aria-modal="true" aria-labelledby="drawer-notes-title">
+    <header class="drawer-header">
+      <div>
+        <h2 class="drawer-title" id="drawer-notes-title">Add Note</h2>
+        <p class="drawer-subtitle">Notes let your team share guidance on how to work claims tagged to this query.</p>
+      </div>
+      <div class="drawer-actions">
+        <button class="btn btn--outline-secondary" data-close>Cancel</button>
+        <button class="btn btn--primary" data-save="notes">Save Note</button>
+      </div>
+    </header>
+    <div class="drawer-body">
+      <p class="required-hint">Fields marked with <span class="req-mark">*</span> are required.</p>
+      <div class="field" data-field-wrap="auditType">
+        <label class="field-label" for="note-audit-type">Audit Type <span class="req-mark">*</span></label>
+        <div class="ds-select" id="note-audit-type">
+          <button class="ds-select-trigger is-placeholder" type="button" data-field="auditType" data-placeholder="Select Audit Type" aria-haspopup="listbox" aria-expanded="false">
+            <span class="ds-select-value">Select Audit Type</span>
+            <svg class="ds-select-caret" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 11 2.5 5.5 3.6 4.4 8 8.8l4.4-4.4 1.1 1.1z"/></svg>
+          </button>
+          <div class="ds-select-menu" role="listbox">
+            <div class="ds-menu-item" role="option" data-value="COB"><svg class="ds-menu-item-check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 8 7 12 13 4"/></svg>COB</div>
+            <div class="ds-menu-item" role="option" data-value="DRG"><svg class="ds-menu-item-check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 8 7 12 13 4"/></svg>DRG</div>
+            <div class="ds-menu-item" role="option" data-value="Bluecard"><svg class="ds-menu-item-check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 8 7 12 13 4"/></svg>Bluecard</div>
+            <div class="ds-menu-item" role="option" data-value="Itemized Bill"><svg class="ds-menu-item-check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 8 7 12 13 4"/></svg>Itemized Bill</div>
+            <div class="ds-menu-item" role="option" data-value="Inpatient"><svg class="ds-menu-item-check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 8 7 12 13 4"/></svg>Inpatient</div>
+          </div>
+        </div>
+        <span class="field-error"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 1 1 14h14z"/><line x1="8" y1="6" x2="8" y2="10"/><circle cx="8" cy="12" r="0.6" fill="currentColor"/></svg>Audit Type is required</span>
+      </div>
+      <div class="field" data-field-wrap="text">
+        <label class="field-label" for="note-text">Note <span class="req-mark">*</span></label>
+        <div class="editor-toolbar" aria-hidden="true">
+          <select aria-label="Text style"><option>Normal text</option><option>Heading</option></select>
+          <select aria-label="Font"><option>Sans Serif</option><option>Serif</option></select>
+          <span class="tb-divider"></span>
+          <button class="tb-btn" type="button" style="font-weight:700">B</button>
+          <button class="tb-btn" type="button" style="font-style:italic">I</button>
+          <button class="tb-btn" type="button" style="text-decoration:underline">U</button>
+          <span class="tb-divider"></span>
+          <button class="tb-btn" type="button" aria-label="Bulleted list">≡</button>
+        </div>
+        <textarea class="textarea editor-textarea" id="note-text" placeholder="Add Note here" data-field="text"></textarea>
+        <span class="field-error"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 1 1 14h14z"/><line x1="8" y1="6" x2="8" y2="10"/><circle cx="8" cy="12" r="0.6" fill="currentColor"/></svg>Please enter a note</span>
+      </div>
+    </div>
+  </aside>
+
+  <aside class="drawer" data-drawer="documents" role="dialog" aria-modal="true" aria-labelledby="drawer-docs-title">
+    <header class="drawer-header">
+      <div>
+        <h2 class="drawer-title" id="drawer-docs-title">Add Document</h2>
+        <p class="drawer-subtitle">Documents hold reference material for this query.</p>
+      </div>
+      <div class="drawer-actions">
+        <button class="btn btn--outline-secondary" data-close>Cancel</button>
+        <button class="btn btn--primary" data-save="documents">Save Document</button>
+      </div>
+    </header>
+    <div class="drawer-body">
+      <p class="required-hint">Fields marked with <span class="req-mark">*</span> are required.</p>
+      <div class="field" data-field-wrap="auditType">
+        <label class="field-label" for="doc-audit-type">Audit Type <span class="req-mark">*</span></label>
+        <div class="ds-select" id="doc-audit-type">
+          <button class="ds-select-trigger is-placeholder" type="button" data-field="auditType" data-placeholder="Select Audit Type" aria-haspopup="listbox" aria-expanded="false">
+            <span class="ds-select-value">Select Audit Type</span>
+            <svg class="ds-select-caret" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 11 2.5 5.5 3.6 4.4 8 8.8l4.4-4.4 1.1 1.1z"/></svg>
+          </button>
+          <div class="ds-select-menu" role="listbox">
+            <div class="ds-menu-item" role="option" data-value="COB"><svg class="ds-menu-item-check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 8 7 12 13 4"/></svg>COB</div>
+            <div class="ds-menu-item" role="option" data-value="DRG"><svg class="ds-menu-item-check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 8 7 12 13 4"/></svg>DRG</div>
+            <div class="ds-menu-item" role="option" data-value="Bluecard"><svg class="ds-menu-item-check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 8 7 12 13 4"/></svg>Bluecard</div>
+            <div class="ds-menu-item" role="option" data-value="Itemized Bill"><svg class="ds-menu-item-check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 8 7 12 13 4"/></svg>Itemized Bill</div>
+          </div>
+        </div>
+        <span class="field-error"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 1 1 14h14z"/><line x1="8" y1="6" x2="8" y2="10"/><circle cx="8" cy="12" r="0.6" fill="currentColor"/></svg>Audit Type is required</span>
+      </div>
+      <div class="field" data-field-wrap="name">
+        <label class="field-label" for="doc-name">Document Name <span class="req-mark">*</span></label>
+        <input class="input" id="doc-name" type="text" placeholder="Add Document Name" data-field="name" />
+        <span class="field-error"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 1 1 14h14z"/><line x1="8" y1="6" x2="8" y2="10"/><circle cx="8" cy="12" r="0.6" fill="currentColor"/></svg>Document Name is required</span>
+      </div>
+      <div class="field" data-field-wrap="file">
+        <label class="field-label">Upload File <span class="req-mark">*</span></label>
+        <div class="field-helper">Supported file types: .pdf, .doc, .docx</div>
+        <div class="browse-row">
+          <button class="btn btn--primary" type="button" data-browse>Browse File</button>
+          <span class="file-chip" data-file-chip hidden></span>
+        </div>
+        <input type="file" accept=".pdf,.doc,.docx" hidden data-file-input data-field="file" />
+        <span class="field-error"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 1 1 14h14z"/><line x1="8" y1="6" x2="8" y2="10"/><circle cx="8" cy="12" r="0.6" fill="currentColor"/></svg>Please choose a file</span>
+      </div>
+    </div>
+  </aside>
+
+  <aside class="drawer" data-drawer="links" role="dialog" aria-modal="true" aria-labelledby="drawer-links-title">
+    <header class="drawer-header">
+      <div>
+        <h2 class="drawer-title" id="drawer-links-title">Add Link</h2>
+        <p class="drawer-subtitle">Links point to external resources for this query.</p>
+      </div>
+      <div class="drawer-actions">
+        <button class="btn btn--outline-secondary" data-close>Cancel</button>
+        <button class="btn btn--primary" data-save="links">Save Link</button>
+      </div>
+    </header>
+    <div class="drawer-body">
+      <p class="required-hint">Fields marked with <span class="req-mark">*</span> are required.</p>
+      <div class="field" data-field-wrap="auditType">
+        <label class="field-label" for="link-audit-type">Audit Type <span class="req-mark">*</span></label>
+        <div class="ds-select" id="link-audit-type">
+          <button class="ds-select-trigger is-placeholder" type="button" data-field="auditType" data-placeholder="Select Audit Type" aria-haspopup="listbox" aria-expanded="false">
+            <span class="ds-select-value">Select Audit Type</span>
+            <svg class="ds-select-caret" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 11 2.5 5.5 3.6 4.4 8 8.8l4.4-4.4 1.1 1.1z"/></svg>
+          </button>
+          <div class="ds-select-menu" role="listbox">
+            <div class="ds-menu-item" role="option" data-value="COB"><svg class="ds-menu-item-check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 8 7 12 13 4"/></svg>COB</div>
+            <div class="ds-menu-item" role="option" data-value="DRG"><svg class="ds-menu-item-check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 8 7 12 13 4"/></svg>DRG</div>
+            <div class="ds-menu-item" role="option" data-value="Bluecard"><svg class="ds-menu-item-check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 8 7 12 13 4"/></svg>Bluecard</div>
+            <div class="ds-menu-item" role="option" data-value="Itemized Bill"><svg class="ds-menu-item-check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 8 7 12 13 4"/></svg>Itemized Bill</div>
+          </div>
+        </div>
+        <span class="field-error"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 1 1 14h14z"/><line x1="8" y1="6" x2="8" y2="10"/><circle cx="8" cy="12" r="0.6" fill="currentColor"/></svg>Audit Type is required</span>
+      </div>
+      <div class="field" data-field-wrap="name">
+        <label class="field-label" for="link-name">Link Name <span class="req-mark">*</span></label>
+        <input class="input" id="link-name" type="text" placeholder="Add Link Name" data-field="name" />
+        <span class="field-error"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 1 1 14h14z"/><line x1="8" y1="6" x2="8" y2="10"/><circle cx="8" cy="12" r="0.6" fill="currentColor"/></svg>Link Name is required</span>
+      </div>
+      <div class="field" data-field-wrap="url">
+        <label class="field-label" for="link-url">URL <span class="req-mark">*</span></label>
+        <input class="input" id="link-url" type="url" placeholder="Add URL" data-field="url" />
+        <span class="field-error"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 1 1 14h14z"/><line x1="8" y1="6" x2="8" y2="10"/><circle cx="8" cy="12" r="0.6" fill="currentColor"/></svg>URL is required</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ====== Edit Query Details drawer (wider, sectioned) ====== -->
+  <aside class="drawer drawer--wide" data-drawer="query-details" role="dialog" aria-modal="true" aria-labelledby="drawer-query-details-title">
+    <header class="drawer-header">
+      <div>
+        <h2 class="drawer-title" id="drawer-query-details-title">Edit Query Details</h2>
+        <p class="drawer-subtitle">Update the configuration for this query.</p>
+      </div>
+      <div class="drawer-actions">
+        <button class="btn btn--outline-secondary" data-close>Cancel</button>
+        <button class="btn btn--primary" data-save-details="query">Save Changes</button>
+      </div>
+    </header>
+    <div class="drawer-body">
+
+      <div class="drawer-section">
+        <h3 class="drawer-section-title">Preliminary Details</h3>
+        <p class="drawer-section-required">Fields marked with <span class="req-mark">*</span> are required.</p>
+        <div class="field-grid-2">
+          <div class="field" data-field-wrap="concept">
+            <label class="field-label" for="qd-concept">Concept <span class="req-mark">*</span><svg class="label-info" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="8" cy="8" r="6.5"/><line x1="8" y1="7" x2="8" y2="11"/><circle cx="8" cy="5" r="0.6" fill="currentColor"/></svg></label>
+            <div class="ds-select" id="qd-concept">
+              <button class="ds-select-trigger" type="button" data-field="concept" data-placeholder="Select Concept" aria-haspopup="listbox" aria-expanded="false">
+                <span class="ds-select-value">Select Concept</span>
+                <svg class="ds-select-caret" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 11 2.5 5.5 3.6 4.4 8 8.8l4.4-4.4 1.1 1.1z"/></svg>
+              </button>
+              <div class="ds-select-menu" role="listbox">
+                <div class="ds-menu-item" role="option" data-value="Vaccine">Vaccine</div>
+                <div class="ds-menu-item" role="option" data-value="Imaging">Imaging</div>
+                <div class="ds-menu-item" role="option" data-value="Inpatient Stay">Inpatient Stay</div>
+                <div class="ds-menu-item" role="option" data-value="Lab Work">Lab Work</div>
+              </div>
+            </div>
+          </div>
+          <div class="field" data-field-wrap="project">
+            <label class="field-label" for="qd-project">Project <span class="req-mark">*</span><svg class="label-info" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="8" cy="8" r="6.5"/><line x1="8" y1="7" x2="8" y2="11"/><circle cx="8" cy="5" r="0.6" fill="currentColor"/></svg></label>
+            <div class="ds-select" id="qd-project">
+              <button class="ds-select-trigger" type="button" data-field="project" data-placeholder="Select Project" aria-haspopup="listbox" aria-expanded="false">
+                <span class="ds-select-value">Select Project</span>
+                <svg class="ds-select-caret" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 11 2.5 5.5 3.6 4.4 8 8.8l4.4-4.4 1.1 1.1z"/></svg>
+              </button>
+              <div class="ds-select-menu" role="listbox">
+                <div class="ds-menu-item" role="option" data-value="Annual Wellness">Annual Wellness</div>
+                <div class="ds-menu-item" role="option" data-value="Coordination of Benefits">Coordination of Benefits</div>
+                <div class="ds-menu-item" role="option" data-value="DRG Validation">DRG Validation</div>
+              </div>
+            </div>
+          </div>
+          <div class="field full" data-field-wrap="paymentTiming">
+            <label class="field-label" for="qd-payment-timing">Payment Timing <span class="req-mark">*</span></label>
+            <div class="ds-select" id="qd-payment-timing">
+              <button class="ds-select-trigger" type="button" data-field="paymentTiming" data-placeholder="Select Payment Timing" aria-haspopup="listbox" aria-expanded="false">
+                <span class="ds-select-value">Select Payment Timing</span>
+                <svg class="ds-select-caret" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 11 2.5 5.5 3.6 4.4 8 8.8l4.4-4.4 1.1 1.1z"/></svg>
+              </button>
+              <div class="ds-select-menu" role="listbox">
+                <div class="ds-menu-item" role="option" data-value="Prepay">Prepay</div>
+                <div class="ds-menu-item" role="option" data-value="Postpay">Postpay</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="drawer-section">
+        <h3 class="drawer-section-title">Query Details</h3>
+        <div class="field-grid-2">
+          <div class="field full" data-field-wrap="queryName">
+            <label class="field-label" for="qd-name">Query Name <span class="req-mark">*</span></label>
+            <input class="input" id="qd-name" type="text" placeholder="Enter Query Name" data-field="queryName" />
+          </div>
+          <div class="field full" data-field-wrap="description">
+            <label class="field-label" for="qd-description">Description <span class="req-mark">*</span></label>
+            <textarea class="textarea" id="qd-description" placeholder="Enter description" data-field="description"></textarea>
+          </div>
+
+          <div class="field" data-field-wrap="queryCategory">
+            <label class="field-label">Query Category</label>
+            <div class="ds-select">
+              <button class="ds-select-trigger" type="button" data-field="queryCategory" data-placeholder="Select Query Category" aria-haspopup="listbox" aria-expanded="false">
+                <span class="ds-select-value">Select Query Category</span>
+                <svg class="ds-select-caret" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 11 2.5 5.5 3.6 4.4 8 8.8l4.4-4.4 1.1 1.1z"/></svg>
+              </button>
+              <div class="ds-select-menu" role="listbox">
+                <div class="ds-menu-item" role="option" data-value="Data Mining">Data Mining</div>
+                <div class="ds-menu-item" role="option" data-value="Clinical">Clinical</div>
+                <div class="ds-menu-item" role="option" data-value="Coding">Coding</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field" data-field-wrap="queryReviewType">
+            <label class="field-label">Query Review Type<svg class="label-info" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="8" cy="8" r="6.5"/><line x1="8" y1="7" x2="8" y2="11"/><circle cx="8" cy="5" r="0.6" fill="currentColor"/></svg></label>
+            <div class="ds-select">
+              <button class="ds-select-trigger" type="button" data-field="queryReviewType" data-placeholder="Select Query Review Type" aria-haspopup="listbox" aria-expanded="false">
+                <span class="ds-select-value">Select Query Review Type</span>
+                <svg class="ds-select-caret" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 11 2.5 5.5 3.6 4.4 8 8.8l4.4-4.4 1.1 1.1z"/></svg>
+              </button>
+              <div class="ds-select-menu" role="listbox">
+                <div class="ds-menu-item" role="option" data-value="Advanced">Advanced</div>
+                <div class="ds-menu-item" role="option" data-value="Standard">Standard</div>
+                <div class="ds-menu-item" role="option" data-value="Manual">Manual</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field" data-field-wrap="queryAuditType">
+            <label class="field-label">Query Audit Type</label>
+            <div class="ds-select">
+              <button class="ds-select-trigger" type="button" data-field="queryAuditType" data-placeholder="Select Query Audit Type" aria-haspopup="listbox" aria-expanded="false">
+                <span class="ds-select-value">Select Query Audit Type</span>
+                <svg class="ds-select-caret" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 11 2.5 5.5 3.6 4.4 8 8.8l4.4-4.4 1.1 1.1z"/></svg>
+              </button>
+              <div class="ds-select-menu" role="listbox">
+                <div class="ds-menu-item" role="option" data-value="Data Mining">Data Mining</div>
+                <div class="ds-menu-item" role="option" data-value="Clinical">Clinical</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field" data-field-wrap="queryType">
+            <label class="field-label">Query Type</label>
+            <div class="ds-select">
+              <button class="ds-select-trigger" type="button" data-field="queryType" data-placeholder="Select Query Type" aria-haspopup="listbox" aria-expanded="false">
+                <span class="ds-select-value">Select Query Type</span>
+                <svg class="ds-select-caret" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 11 2.5 5.5 3.6 4.4 8 8.8l4.4-4.4 1.1 1.1z"/></svg>
+              </button>
+              <div class="ds-select-menu" role="listbox">
+                <div class="ds-menu-item" role="option" data-value="COB">COB</div>
+                <div class="ds-menu-item" role="option" data-value="DRG">DRG</div>
+                <div class="ds-menu-item" role="option" data-value="Bluecard">Bluecard</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field" data-field-wrap="querySource">
+            <label class="field-label">Query Source</label>
+            <div class="ds-select">
+              <button class="ds-select-trigger is-placeholder" type="button" data-field="querySource" data-placeholder="Select Query Source" aria-haspopup="listbox" aria-expanded="false">
+                <span class="ds-select-value">Select Query Source</span>
+                <svg class="ds-select-caret" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 11 2.5 5.5 3.6 4.4 8 8.8l4.4-4.4 1.1 1.1z"/></svg>
+              </button>
+              <div class="ds-select-menu" role="listbox">
+                <div class="ds-menu-item" role="option" data-value="Internal">Internal</div>
+                <div class="ds-menu-item" role="option" data-value="External">External</div>
+                <div class="ds-menu-item" role="option" data-value="LV">LV</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field" data-field-wrap="queryOwner">
+            <label class="field-label">Query Owner</label>
+            <div class="ds-select">
+              <button class="ds-select-trigger is-placeholder" type="button" data-field="queryOwner" data-placeholder="Select Query Owner" aria-haspopup="listbox" aria-expanded="false">
+                <span class="ds-select-value">Select Query Owner</span>
+                <svg class="ds-select-caret" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 11 2.5 5.5 3.6 4.4 8 8.8l4.4-4.4 1.1 1.1z"/></svg>
+              </button>
+              <div class="ds-select-menu" role="listbox">
+                <div class="ds-menu-item" role="option" data-value="Chad Thomas">Chad Thomas</div>
+                <div class="ds-menu-item" role="option" data-value="Sarah Lee">Sarah Lee</div>
+                <div class="ds-menu-item" role="option" data-value="Test Owner">Test Owner</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field" data-field-wrap="carc">
+            <label class="field-label">CARC</label>
+            <div class="ds-select">
+              <button class="ds-select-trigger" type="button" data-field="carc" data-placeholder="Select CARC" aria-haspopup="listbox" aria-expanded="false">
+                <span class="ds-select-value">Select CARC</span>
+                <svg class="ds-select-caret" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 11 2.5 5.5 3.6 4.4 8 8.8l4.4-4.4 1.1 1.1z"/></svg>
+              </button>
+              <div class="ds-select-menu" role="listbox">
+                <div class="ds-menu-item" role="option" data-value="M111 - We do not pay">M111 — We do not pay for…</div>
+                <div class="ds-menu-item" role="option" data-value="N123 - Missing or invalid">N123 — Missing or invalid…</div>
+                <div class="ds-menu-item" role="option" data-value="A45 - Charge exceeds">A45 — Charge exceeds…</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field" data-field-wrap="rarc">
+            <label class="field-label">RARC</label>
+            <div class="ds-select">
+              <button class="ds-select-trigger is-placeholder" type="button" data-field="rarc" data-placeholder="Select RARC" aria-haspopup="listbox" aria-expanded="false">
+                <span class="ds-select-value">Select RARC</span>
+                <svg class="ds-select-caret" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 11 2.5 5.5 3.6 4.4 8 8.8l4.4-4.4 1.1 1.1z"/></svg>
+              </button>
+              <div class="ds-select-menu" role="listbox">
+                <div class="ds-menu-item" role="option" data-value="MA01">MA01</div>
+                <div class="ds-menu-item" role="option" data-value="MA02">MA02</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="toggle-row">
+          <div class="toggle-text">
+            <span class="toggle-title">Include reference claims with this query?</span>
+            <span class="toggle-helper">Enable this to view duplicate or related claims side by side.</span>
+          </div>
+          <button class="toggle" type="button" data-toggle data-field="referenceClaims" aria-pressed="false">
+            <span class="toggle-switch" aria-hidden="true"></span>
+            <span class="toggle-state">No</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- ====== Edit Rule drawer ====== -->
+  <aside class="drawer drawer--wide" data-drawer="rule" role="dialog" aria-modal="true" aria-labelledby="drawer-rule-title">
+    <header class="drawer-header">
+      <div>
+        <h2 class="drawer-title" id="drawer-rule-title">Edit Rule</h2>
+        <p class="drawer-subtitle">Update the rule configuration for this query.</p>
+      </div>
+      <div class="drawer-actions">
+        <button class="btn btn--outline-secondary" data-close>Cancel</button>
+        <button class="btn btn--primary" data-save-details="rule">Save Changes</button>
+      </div>
+    </header>
+    <div class="drawer-body">
+      <div class="drawer-section">
+        <h3 class="drawer-section-title">Rule Configuration</h3>
+        <p class="drawer-section-required">Fields marked with <span class="req-mark">*</span> are required.</p>
+        <div class="field-grid-2">
+          <div class="field" data-field-wrap="queryRuleId">
+            <label class="field-label" for="ru-id">Query Rule ID <span class="req-mark">*</span></label>
+            <input class="input" id="ru-id" type="text" placeholder="Enter ID" data-field="queryRuleId" />
+          </div>
+          <div class="field" data-field-wrap="category">
+            <label class="field-label">Category</label>
+            <div class="ds-select">
+              <button class="ds-select-trigger" type="button" data-field="category" data-placeholder="Select Category" aria-haspopup="listbox" aria-expanded="false">
+                <span class="ds-select-value">Select Category</span>
+                <svg class="ds-select-caret" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 11 2.5 5.5 3.6 4.4 8 8.8l4.4-4.4 1.1 1.1z"/></svg>
+              </button>
+              <div class="ds-select-menu" role="listbox">
+                <div class="ds-menu-item" role="option" data-value="Clinical">Clinical</div>
+                <div class="ds-menu-item" role="option" data-value="Data Mining">Data Mining</div>
+                <div class="ds-menu-item" role="option" data-value="Coding">Coding</div>
+              </div>
+            </div>
+          </div>
+          <div class="field" data-field-wrap="priority">
+            <label class="field-label" for="ru-priority">Priority</label>
+            <input class="input" id="ru-priority" type="number" placeholder="0" data-field="priority" />
+          </div>
+          <div class="field" data-field-wrap="subPriority">
+            <label class="field-label" for="ru-subpriority">Sub Priority</label>
+            <input class="input" id="ru-subpriority" type="number" placeholder="0" data-field="subPriority" />
+          </div>
+          <div class="field" data-field-wrap="ruleSource">
+            <label class="field-label">Rule Source</label>
+            <div class="ds-select">
+              <button class="ds-select-trigger" type="button" data-field="ruleSource" data-placeholder="Select Rule Source" aria-haspopup="listbox" aria-expanded="false">
+                <span class="ds-select-value">Select Rule Source</span>
+                <svg class="ds-select-caret" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 11 2.5 5.5 3.6 4.4 8 8.8l4.4-4.4 1.1 1.1z"/></svg>
+              </button>
+              <div class="ds-select-menu" role="listbox">
+                <div class="ds-menu-item" role="option" data-value="LV">LV</div>
+                <div class="ds-menu-item" role="option" data-value="HV">HV</div>
+                <div class="ds-menu-item" role="option" data-value="External">External</div>
+              </div>
+            </div>
+          </div>
+          <div class="field" data-field-wrap="ruleOwner">
+            <label class="field-label">Rule Owner</label>
+            <div class="ds-select">
+              <button class="ds-select-trigger" type="button" data-field="ruleOwner" data-placeholder="Select Rule Owner" aria-haspopup="listbox" aria-expanded="false">
+                <span class="ds-select-value">Select Rule Owner</span>
+                <svg class="ds-select-caret" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 11 2.5 5.5 3.6 4.4 8 8.8l4.4-4.4 1.1 1.1z"/></svg>
+              </button>
+              <div class="ds-select-menu" role="listbox">
+                <div class="ds-menu-item" role="option" data-value="Test Owner">Test Owner</div>
+                <div class="ds-menu-item" role="option" data-value="Chad Thomas">Chad Thomas</div>
+                <div class="ds-menu-item" role="option" data-value="Sarah Lee">Sarah Lee</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="toggle-row">
+          <div class="toggle-text">
+            <span class="toggle-title">Send to Third Party</span>
+            <span class="toggle-helper">Allow exporting matched claims to the integrated third-party reviewer.</span>
+          </div>
+          <button class="toggle" type="button" data-toggle data-field="sendToThirdParty" aria-pressed="false">
+            <span class="toggle-switch" aria-hidden="true"></span>
+            <span class="toggle-state">No</span>
+          </button>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-text">
+            <span class="toggle-title">Initial Reviewer</span>
+            <span class="toggle-helper">Assign this query to the initial reviewer queue first.</span>
+          </div>
+          <button class="toggle" type="button" data-toggle data-field="initialReviewer" aria-pressed="false">
+            <span class="toggle-switch" aria-hidden="true"></span>
+            <span class="toggle-state">No</span>
+          </button>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-text">
+            <span class="toggle-title">Automated Rule</span>
+            <span class="toggle-helper">Apply this rule automatically when matching claims arrive.</span>
+          </div>
+          <button class="toggle" type="button" data-toggle data-field="automatedRule" aria-pressed="false">
+            <span class="toggle-switch" aria-hidden="true"></span>
+            <span class="toggle-state">No</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ====== Confirm delete modal ====== -->
+  <div class="modal-scrim" data-confirm>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+      <div class="modal-header">
+        <h2 class="modal-title" id="confirm-title">Delete this item?</h2>
+      </div>
+      <div class="modal-body">This action cannot be undone. The item will be removed from this query immediately.</div>
+      <div class="modal-footer">
+        <button class="btn btn--outline-secondary" data-confirm-cancel>Cancel</button>
+        <button class="btn btn--outline-danger" data-confirm-ok>Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== Toast stack ====== -->
+  <div class="toast-stack" aria-live="polite" aria-atomic="true"></div>
+
+<script>
+(() => {
+  const state = {
+    notes: [],
+    documents: [],
+    links: [],
+    activity: [],
+    // Details page — Query Details + Rule cards
+    queryDetails: {
+      project: "Annual Wellness",
+      concept: "Vaccine",
+      paymentTiming: "Prepay",
+      queryName: "Vaccine",
+      description: "Created for test",
+      queryCategory: "Data Mining",
+      queryReviewType: "Advanced",
+      queryAuditType: "Data Mining",
+      queryType: "COB",
+      querySource: "",
+      queryOwner: "",
+      carc: "M111 - We do not pay",
+      rarc: "",
+      referenceClaims: false,
+    },
+    rule: {
+      queryRuleId: "435466",
+      category: "Clinical",
+      priority: "16",
+      subPriority: "5",
+      ruleSource: "LV",
+      ruleOwner: "Test Owner",
+      extractType: "",
+      organization: "",
+      automationProcess: "",
+      origination: "",
+      sendToThirdParty: true,
+      initialReviewer: false,
+      automatedRule: false,
+    },
+  };
+  // Editing context per drawer — null when adding, otherwise { id, original: {...} }
+  const editing = { notes: null, documents: null, links: null };
+
+  /* Details — field schemas drive both the read-only card rows and the edit forms */
+  const QUERY_DETAILS_FIELDS = [
+    { key: "project",          label: "Project" },
+    { key: "concept",          label: "Concept" },
+    { key: "paymentTiming",    label: "Payment Timing" },
+    { key: "queryName",        label: "Query Name" },
+    { key: "description",      label: "Description" },
+    { key: "queryCategory",    label: "Query Category" },
+    { key: "queryReviewType",  label: "Query Review Type" },
+    { key: "queryAuditType",   label: "Query Audit Type" },
+    { key: "queryType",        label: "Query Type" },
+    { key: "querySource",      label: "Query Source" },
+    { key: "queryOwner",       label: "Query Owner" },
+    { key: "carc",             label: "CARC", danger: true },
+    { key: "rarc",             label: "RARC" },
+    { key: "referenceClaims",  label: "Reference Claims", type: "boolean" },
+  ];
+  const RULE_FIELDS = [
+    { key: "queryRuleId",        label: "Query Rule ID" },
+    { key: "category",           label: "Category" },
+    { key: "priority",           label: "Priority" },
+    { key: "subPriority",        label: "Sub Priority" },
+    { key: "ruleSource",         label: "Rule Source" },
+    { key: "ruleOwner",          label: "Rule Owner" },
+    { key: "extractType",        label: "Extract Type" },
+    { key: "organization",       label: "Organization" },
+    { key: "automationProcess",  label: "Automation Process" },
+    { key: "origination",        label: "Origination" },
+    { key: "sendToThirdParty",   label: "Send to Third Party", type: "boolean" },
+    { key: "initialReviewer",    label: "Initial Reviewer", type: "boolean" },
+    { key: "automatedRule",      label: "Automated Rule", type: "boolean" },
+  ];
+
+  /* ===== Demo seed — pre-populates the prototype with realistic data so the
+   *      Activity History tab and Help & Resources sections aren't empty
+   *      on the first page load. Remove this block when the prototype is
+   *      wired to a real backend. ===== */
+  const seedDemo = () => {
+    // Resources currently attached to this query
+    state.notes.push({
+      id: "seed-n1",
+      auditType: "COB",
+      text: "Set up COB type and Advanced review. Ready for QA once the rule ID is confirmed.",
+      date: "25/05/2026",
+      addedBy: "user1"
+    });
+    state.documents.push({
+      id: "seed-d1",
+      auditType: "Bluecard",
+      name: "Additional Polis",
+      file: "Polis ACM.pdf",
+      date: "22/05/2026",
+      addedBy: "user1"
+    });
+    state.links.push({
+      id: "seed-l1",
+      auditType: "COB",
+      name: "CMS guidance",
+      url: "https://www.cms.gov/",
+      date: "20/05/2026",
+      addedBy: "user1"
+    });
+
+    // Activity log — newest first
+    const d = (date, user, section, action, action_summary, details) => ({
+      id: uid(), section, action, action_summary, details, date, user
+    });
+    const diff = (label, oldV, newV) =>
+      `${label}: <span class="diff-old">${escapeHtml(oldV)}</span><span class="diff-arrow">→</span><span class="diff-new">${escapeHtml(newV)}</span>`;
+
+    state.activity.push(
+      d("25/05/2026", "user1", "notes", "edit",
+        'Edited note "Set up COB type and Advanced review…"',
+        diff("Audit Type", "DRG", "COB")),
+      d("25/05/2026", "user2", "notes", "add",
+        'Added note "Set up COB type and Advanced review…"',
+        escapeHtml("Audit Type: COB · Note: Set up COB type and Advanced review. Ready for QA once the rule ID is confirmed.")),
+      d("23/05/2026", "user1", "links", "delete",
+        'Removed link "Old payer reference"',
+        escapeHtml("Audit Type: DRG · Name: Old payer reference · URL: https://example.com/old-ref")),
+      d("22/05/2026", "user2", "documents", "edit",
+        'Edited document "Additional Polis"',
+        diff("Document Name", "Polis ACM v1", "Additional Polis") + "; " + diff("File", "polis-acm-v1.pdf", "Polis ACM.pdf")),
+      d("22/05/2026", "user2", "documents", "add",
+        'Added document "Polis ACM v1"',
+        escapeHtml("Audit Type: Bluecard · Name: Polis ACM v1 · File: polis-acm-v1.pdf")),
+      d("20/05/2026", "user1", "links", "add",
+        'Added link "CMS guidance"',
+        escapeHtml("Audit Type: COB · Name: CMS guidance · URL: https://www.cms.gov/")),
+    );
+  };
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const todayStr = () => {
+    const d = new Date();
+    const pad = n => String(n).padStart(2, "0");
+    return `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`;
+  };
+  const uid = () => Math.random().toString(36).slice(2, 9);
+  const escapeHtml = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+  /* Section collapse */
+  $$(".section-header").forEach(h => {
+    const sec = h.closest(".section");
+    const toggle = () => {
+      const c = sec.classList.toggle("collapsed");
+      h.setAttribute("aria-expanded", String(!c));
+    };
+    h.addEventListener("click", e => { if (e.target.closest(".btn")) return; toggle(); });
+    h.addEventListener("keydown", e => {
+      if ((e.key === "Enter" || e.key === " ") && !e.target.closest(".btn")) { e.preventDefault(); toggle(); }
+    });
+  });
+
+  /* Drawer */
+  const scrim = $("[data-scrim]");
+  const openDrawer = key => {
+    const d = $(`.drawer[data-drawer="${key}"]`);
+    if (!d) return;
+    scrim.classList.add("open");
+    d.classList.add("open");
+    setTimeout(() => { const f = d.querySelector("select, input, textarea, button"); if (f) f.focus(); }, 200);
+  };
+  const closeDrawer = () => {
+    scrim.classList.remove("open");
+    $$(".drawer").forEach(d => d.classList.remove("open"));
+    // Clear edit context for every drawer
+    ["notes","documents","links"].forEach(k => { editing[k] = null; });
+  };
+  $$("[data-add]").forEach(b => b.addEventListener("click", e => { e.stopPropagation(); openDrawer(b.dataset.add); }));
+  $$("[data-close]").forEach(b => b.addEventListener("click", closeDrawer));
+  scrim.addEventListener("click", closeDrawer);
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closeDrawer(); });
+
+  /* Browse file */
+  $$("[data-browse]").forEach(btn => {
+    const d = btn.closest(".drawer");
+    const input = $("[data-file-input]", d);
+    const chip = $("[data-file-chip]", d);
+    btn.addEventListener("click", () => input.click());
+    input.addEventListener("change", () => {
+      const f = input.files && input.files[0];
+      if (f) { chip.hidden = false; chip.textContent = f.name; }
+      else { chip.hidden = true; chip.textContent = ""; }
+    });
+  });
+
+  /* ===== DS Select widget — custom dropdown matching DS Menu Items ===== */
+  const setSelectValue = (selectEl, value) => {
+    const trigger = $(".ds-select-trigger", selectEl);
+    const valueEl = $(".ds-select-value", selectEl);
+    const placeholder = trigger.dataset.placeholder;
+    trigger.dataset.value = value || "";
+    if (value) {
+      valueEl.textContent = value;
+      trigger.classList.remove("is-placeholder");
+    } else {
+      valueEl.textContent = placeholder;
+      trigger.classList.add("is-placeholder");
+    }
+    // Mark selected menu item
+    $$(".ds-menu-item", selectEl).forEach(item => {
+      item.classList.toggle("is-selected", item.dataset.value === value);
+    });
+  };
+  const closeAllSelects = (except) => {
+    $$(".ds-select.is-open").forEach(s => {
+      if (s !== except) {
+        s.classList.remove("is-open");
+        $(".ds-select-trigger", s).setAttribute("aria-expanded", "false");
+      }
+    });
+  };
+  $$(".ds-select").forEach(sel => {
+    const trigger = $(".ds-select-trigger", sel);
+    trigger.addEventListener("click", e => {
+      e.stopPropagation();
+      const wasOpen = sel.classList.contains("is-open");
+      closeAllSelects();
+      if (!wasOpen) {
+        sel.classList.add("is-open");
+        trigger.setAttribute("aria-expanded", "true");
+      } else {
+        sel.classList.remove("is-open");
+        trigger.setAttribute("aria-expanded", "false");
+      }
+    });
+    $$(".ds-menu-item", sel).forEach(item => {
+      item.addEventListener("click", e => {
+        e.stopPropagation();
+        setSelectValue(sel, item.dataset.value);
+        sel.classList.remove("is-open");
+        trigger.setAttribute("aria-expanded", "false");
+        trigger.focus();
+        // clear any error when user picks a value
+        const fieldWrap = sel.closest(".field");
+        if (fieldWrap) fieldWrap.classList.remove("invalid");
+      });
+      // keyboard support on menu items
+      item.tabIndex = 0;
+      item.addEventListener("keydown", e => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); item.click(); }
+      });
+    });
+  });
+  // close selects on outside click / ESC
+  document.addEventListener("click", () => closeAllSelects());
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closeAllSelects(); });
+
+  /* ===== Form helpers (DS Select-aware) ===== */
+  const readDrawer = d => {
+    const data = {};
+    // Native inputs / textareas
+    $$("[data-field]", d).forEach(el => {
+      if (el.classList && el.classList.contains("ds-select-trigger")) {
+        data[el.dataset.field] = el.dataset.value || "";
+      } else if (el.type === "file") {
+        data[el.dataset.field] = el.files && el.files[0] ? el.files[0].name : "";
+      } else {
+        data[el.dataset.field] = (el.value || "").trim();
+      }
+    });
+    return data;
+  };
+  const fieldValueEmpty = (el) => {
+    if (el.classList && el.classList.contains("ds-select-trigger")) return !el.dataset.value;
+    if (el.type === "file") return !(el.files && el.files[0]);
+    return !(el.value || "").trim();
+  };
+  const validate = (d, required) => {
+    let ok = true;
+    $$("[data-field]", d).forEach(el => {
+      if (!required.includes(el.dataset.field)) return;
+      const wrap = el.closest(".field");
+      if (fieldValueEmpty(el)) {
+        if (wrap) wrap.classList.add("invalid");
+        ok = false;
+      } else if (wrap) {
+        wrap.classList.remove("invalid");
+      }
+    });
+    return ok;
+  };
+  const resetDrawer = d => {
+    $$("[data-field]", d).forEach(el => {
+      if (el.classList && el.classList.contains("ds-select-trigger")) {
+        setSelectValue(el.closest(".ds-select"), "");
+      } else if (el.type === "file") {
+        el.value = "";
+        const chip = $("[data-file-chip]", d);
+        if (chip) { chip.hidden = true; chip.textContent = ""; }
+      } else {
+        el.value = "";
+      }
+    });
+    $$(".field.invalid", d).forEach(f => f.classList.remove("invalid"));
+  };
+  // Live-clear error as the user types
+  $$(".drawer [data-field]").forEach(el => {
+    if (el.classList && el.classList.contains("ds-select-trigger")) return; // handled in select wiring
+    const onChange = () => {
+      if (!fieldValueEmpty(el)) {
+        const wrap = el.closest(".field");
+        if (wrap) wrap.classList.remove("invalid");
+      }
+    };
+    el.addEventListener("input", onChange);
+    el.addEventListener("change", onChange);
+  });
+  /* ===== Activity logging =====
+   *  Each event:
+   *    { id, section, action: "add"|"edit"|"delete",
+   *      action_summary, details, target, date, user }
+   *  Rendered in the Activity History section, newest first.
+   */
+  const SECTION_SINGULAR = { notes: "note", documents: "document", links: "link" };
+  const SECTION_LABEL = { notes: "Notes", documents: "Documents", links: "Links" };
+  // What identifies a record for display ("the document called X")
+  const targetLabel = (key, item) => {
+    if (key === "notes") {
+      const snippet = (item.text || "").slice(0, 60) + ((item.text || "").length > 60 ? "…" : "");
+      return snippet || "(empty note)";
+    }
+    return item.name || "(untitled)";
+  };
+  // Field metadata used by the diff
+  const FIELD_LABELS = {
+    auditType: "Audit Type",
+    text: "Note",
+    name: "Name",
+    file: "File",
+    url: "URL"
+  };
+  const fieldsForKey = (key) => ({
+    notes: ["auditType","text"],
+    documents: ["auditType","name","file"],
+    links: ["auditType","name","url"]
+  })[key];
+
+  const detailsFromRecord = (key, record) =>
+    fieldsForKey(key)
+      .filter(f => record[f])
+      .map(f => `${FIELD_LABELS[f]}: ${record[f]}`)
+      .join(" · ");
+
+  const detailsFromDiff = (key, oldRec, newRec) => {
+    const changes = fieldsForKey(key)
+      .filter(f => (oldRec[f] || "") !== (newRec[f] || ""))
+      .map(f => `${FIELD_LABELS[f]}: <span class="diff-old">${escapeHtml(oldRec[f] || "—")}</span><span class="diff-arrow">→</span><span class="diff-new">${escapeHtml(newRec[f] || "—")}</span>`);
+    return changes.length ? changes.join("; ") : "No fields changed";
+  };
+
+  const logActivity = (section, action, target, detailsHtml) => {
+    state.activity.unshift({
+      id: uid(),
+      section,
+      action,
+      action_summary: action === "add"
+        ? `Added ${SECTION_SINGULAR[section]} "${target}"`
+        : action === "edit"
+        ? `Edited ${SECTION_SINGULAR[section]} "${target}"`
+        : `Removed ${SECTION_SINGULAR[section]} "${target}"`,
+      details: detailsHtml,
+      date: todayStr(),
+      user: "user1",
+    });
+    renderActivity();
+  };
+
+  $$("[data-save]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const key = btn.dataset.save;
+      const drawer = $(`.drawer[data-drawer="${key}"]`);
+      const required = fieldsForKey(key);
+      if (!validate(drawer, required)) {
+        const firstInvalid = drawer.querySelector(".field.invalid [data-field]");
+        if (firstInvalid && firstInvalid.focus) firstInvalid.focus();
+        return;
+      }
+      const data = readDrawer(drawer);
+      const ctx = editing[key];
+
+      if (ctx) {
+        // EDIT — update in place, log a diff
+        const idx = state[key].findIndex(r => r.id === ctx.id);
+        if (idx >= 0) {
+          const updated = { ...state[key][idx], ...data };
+          state[key][idx] = updated;
+          logActivity(key, "edit", targetLabel(key, updated), detailsFromDiff(key, ctx.original, updated));
+        }
+      } else {
+        // ADD — push, log payload summary
+        const record = { id: uid(), date: todayStr(), addedBy: "user1", ...data };
+        state[key].push(record);
+        logActivity(key, "add", targetLabel(key, record), escapeHtml(detailsFromRecord(key, record)));
+      }
+
+      renderList(key);
+      resetDrawer(drawer);
+      closeDrawer();
+
+      const verbed = ctx ? "updated" : "added";
+      const messages = {
+        notes: `Note was successfully ${verbed}`,
+        documents: `Document was successfully ${verbed}`,
+        links: `Link was successfully ${verbed}`,
+      };
+      showToast(messages[key], "success");
+    });
+  });
+
+  /* Render list */
+  const renderList = key => {
+    const empty = $(`[data-empty="${key}"]`);
+    const table = $(`[data-table="${key}"]`);
+    const tbody = $("tbody", table);
+    const items = state[key];
+    $(`[data-count="${key}"]`).textContent = items.length;
+    if (items.length === 0) {
+      empty.style.display = "";
+      table.style.display = "none";
+      tbody.innerHTML = "";
+      return;
+    }
+    empty.style.display = "none";
+    table.style.display = "";
+    tbody.innerHTML = items.map(it => rowHtml(key, it)).join("");
+    $$("[data-action]", tbody).forEach(b => {
+      b.addEventListener("click", () => {
+        const a = b.dataset.action, id = b.dataset.id;
+        if (a === "delete") confirmDelete(key, id);
+        if (a === "edit") editItem(key, id);
+        if (a === "download") showToast("Download started", "success");
+      });
+    });
+  };
+  const rowHtml = (key, it) => {
+    const tag = `<span class="audit-tag">${escapeHtml(it.auditType)}</span>`;
+    const dateCell = `<td>${it.date}</td>`;
+    const userCell = `<td>${it.addedBy}</td>`;
+    const trashIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>';
+    const editIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>';
+    const dlIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>';
+    const actions = (extra="") => `<td class="actions-cell">${extra}
+        <button class="btn btn--icon danger" aria-label="Delete" data-action="delete" data-id="${it.id}">${trashIcon}</button>
+        <button class="btn btn--icon" aria-label="Edit" data-action="edit" data-id="${it.id}">${editIcon}</button>
+      </td>`;
+    if (key === "notes") return `<tr><td>${tag}</td><td>${escapeHtml(it.text)}</td>${dateCell}${userCell}${actions()}</tr>`;
+    if (key === "documents") {
+      const dl = `<button class="btn btn--icon" aria-label="Download" data-action="download" data-id="${it.id}">${dlIcon}</button>`;
+      return `<tr><td>${tag}</td><td>${escapeHtml(it.name)}</td><td>${escapeHtml(it.file)}</td>${dateCell}${userCell}${actions(dl)}</tr>`;
+    }
+    if (key === "links") {
+      const safe = it.url.startsWith("http") ? it.url : `https://${it.url}`;
+      return `<tr><td>${tag}</td><td class="link-cell"><a href="${escapeHtml(safe)}" target="_blank" rel="noopener">${escapeHtml(it.name)}</a></td>${dateCell}${userCell}${actions()}</tr>`;
+    }
+  };
+
+  /* Edit — keep the record's ID stable, snapshot original so we can diff on save */
+  const editItem = (key, id) => {
+    const item = state[key].find(x => x.id === id);
+    if (!item) return;
+    const drawer = $(`.drawer[data-drawer="${key}"]`);
+    $$("[data-field]", drawer).forEach(el => {
+      const value = item[el.dataset.field];
+      if (value === undefined) return;
+      if (el.classList && el.classList.contains("ds-select-trigger")) {
+        setSelectValue(el.closest(".ds-select"), value);
+      } else if (el.type !== "file") {
+        el.value = value;
+      }
+    });
+    // Reflect uploaded file in the chip (without re-picking)
+    if (key === "documents") {
+      const chip = $("[data-file-chip]", drawer);
+      if (chip && item.file) { chip.hidden = false; chip.textContent = item.file; }
+    }
+    editing[key] = { id, original: { ...item } };
+    openDrawer(key);
+  };
+
+  /* Activity table render — newest first */
+  const ACTION_ICON = {
+    add:    '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v10M3 8h10"/></svg>',
+    edit:   '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14h5"/><path d="m11.5 2.5 2 2L5 13l-3 .5L2.5 11z"/></svg>',
+    delete: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 4 4 4 14 4"/><path d="M12 4l-.7 9.2A1.5 1.5 0 0 1 9.8 14.5H6.2a1.5 1.5 0 0 1-1.5-1.3L4 4"/><path d="M6 7v4M10 7v4"/></svg>'
+  };
+  const renderActivity = () => {
+    const items = state.activity;
+    const empty = $('[data-empty="activity"]');
+    const table = $('[data-table="activity"]');
+    const tbody = $("tbody", table);
+    const countEl = $('[data-count="activity"]');
+    if (countEl) countEl.textContent = items.length;
+    if (items.length === 0) {
+      empty.style.display = "";
+      table.style.display = "none";
+      tbody.innerHTML = "";
+      return;
+    }
+    empty.style.display = "none";
+    table.style.display = "";
+    tbody.innerHTML = items.map(ev => `
+      <tr>
+        <td>
+          <span class="section-chip" data-section="${ev.section}">
+            <span class="section-chip-dot" aria-hidden="true"></span>
+            ${SECTION_LABEL[ev.section]}
+          </span>
+        </td>
+        <td>
+          <div class="event-cell">
+            <div class="event-icon" data-action="${ev.action}" aria-hidden="true">${ACTION_ICON[ev.action]}</div>
+            <div class="event-body">
+              <div class="event-action">${escapeHtml(ev.action_summary)}</div>
+              <div class="event-details">${ev.details}</div>
+            </div>
+          </div>
+        </td>
+        <td>${escapeHtml(ev.date)}</td>
+        <td>${escapeHtml(ev.user)}</td>
+      </tr>
+    `).join("");
+  };
+
+  /* Confirm delete — also logs to activity */
+  const confirmModal = $("[data-confirm]");
+  let pending = null;
+  const confirmDelete = (key, id) => { pending = { key, id }; confirmModal.classList.add("open"); };
+  $("[data-confirm-cancel]").addEventListener("click", () => { confirmModal.classList.remove("open"); pending = null; });
+  $("[data-confirm-ok]").addEventListener("click", () => {
+    if (!pending) return;
+    const { key, id } = pending;
+    const removed = state[key].find(x => x.id === id);
+    state[key] = state[key].filter(x => x.id !== id);
+    if (removed) {
+      logActivity(key, "delete", targetLabel(key, removed), escapeHtml(detailsFromRecord(key, removed)));
+    }
+    renderList(key);
+    confirmModal.classList.remove("open");
+    const labels = { notes: "Note", documents: "Document", links: "Link" };
+    showToast(`${labels[key]} deleted`, "success");
+    pending = null;
+  });
+  confirmModal.addEventListener("click", e => { if (e.target === confirmModal) { confirmModal.classList.remove("open"); pending = null; } });
+
+  /* ===== Details — render two cards (Query Details + Rule) ===== */
+  const detailsConfig = {
+    query: { fields: QUERY_DETAILS_FIELDS, drawer: "query-details", stateKey: "queryDetails", label: "Query details" },
+    rule:  { fields: RULE_FIELDS,           drawer: "rule",           stateKey: "rule",         label: "Rule" },
+  };
+
+  const formatValue = (value, field) => {
+    if (field.type === "boolean") return value ? "Yes" : "No";
+    return value || "";
+  };
+
+  const renderDetails = () => {
+    Object.entries(detailsConfig).forEach(([card, cfg]) => {
+      const container = $(`[data-details-rows="${card}"]`);
+      if (!container) return;
+      const data = state[cfg.stateKey];
+      container.innerHTML = cfg.fields.map(f => {
+        const raw = data[f.key];
+        const isBool = f.type === "boolean";
+        const isEmpty = !isBool && (raw === undefined || raw === null || raw === "");
+        const display = isEmpty ? "—" : formatValue(raw, f);
+        const cls = isEmpty
+          ? "details-row-value empty"
+          : (f.danger ? "details-row-value danger" : "details-row-value");
+        return `
+          <div class="details-row">
+            <span class="details-row-label">${escapeHtml(f.label)}</span>
+            <span class="${cls}" title="${escapeHtml(display)}">${escapeHtml(display)}</span>
+          </div>`;
+      }).join("");
+    });
+  };
+
+  /* Open the right edit drawer pre-filled with current values */
+  $$("[data-edit-details]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const card = btn.dataset.editDetails;
+      const cfg = detailsConfig[card];
+      if (!cfg) return;
+      const drawer = $(`.drawer[data-drawer="${cfg.drawer}"]`);
+      if (!drawer) return;
+      const data = state[cfg.stateKey];
+
+      // Populate every [data-field] inside the drawer
+      $$("[data-field]", drawer).forEach(el => {
+        const value = data[el.dataset.field];
+        if (el.classList && el.classList.contains("ds-select-trigger")) {
+          setSelectValue(el.closest(".ds-select"), value || "");
+        } else if (el.dataset.toggle !== undefined || el.hasAttribute("data-toggle")) {
+          setToggle(el, !!value);
+        } else if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+          el.value = value || "";
+        }
+      });
+
+      // Open
+      openDrawer(cfg.drawer);
+    });
+  });
+
+  /* Toggle (switch) — used in the edit drawers */
+  const setToggle = (btn, on) => {
+    btn.setAttribute("aria-pressed", on ? "true" : "false");
+    const label = $(".toggle-state", btn);
+    if (label) label.textContent = on ? "Yes" : "No";
+  };
+  $$("[data-toggle]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const on = btn.getAttribute("aria-pressed") !== "true";
+      setToggle(btn, on);
+    });
+  });
+
+  /* Save details — replace state + close + toast */
+  $$("[data-save-details]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const card = btn.dataset.saveDetails;
+      const cfg = detailsConfig[card];
+      if (!cfg) return;
+      const drawer = $(`.drawer[data-drawer="${cfg.drawer}"]`);
+      const data = { ...state[cfg.stateKey] };
+
+      // Read every [data-field] in the drawer
+      $$("[data-field]", drawer).forEach(el => {
+        const key = el.dataset.field;
+        if (el.classList && el.classList.contains("ds-select-trigger")) {
+          data[key] = el.dataset.value || "";
+        } else if (el.hasAttribute("data-toggle")) {
+          data[key] = el.getAttribute("aria-pressed") === "true";
+        } else if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+          data[key] = (el.value || "").trim();
+        }
+      });
+
+      state[cfg.stateKey] = data;
+      renderDetails();
+      closeDrawer();
+      showToast(`${cfg.label} updated successfully`, "success");
+    });
+  });
+
+  /* Toast */
+  const toastStack = $(".toast-stack");
+  const showToast = (msg, kind = "success") => {
+    const t = document.createElement("div");
+    t.className = "toast";
+    if (kind === "danger") t.style.background = "var(--text-danger-primary)";
+    t.innerHTML = `
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+      <span>${escapeHtml(msg)}</span>
+      <button class="toast-close" aria-label="Dismiss"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>`;
+    toastStack.appendChild(t);
+    const dismiss = () => { t.classList.add("exit"); setTimeout(() => t.remove(), 240); };
+    t.querySelector(".toast-close").addEventListener("click", dismiss);
+    setTimeout(dismiss, 4000);
+  };
+
+  /* Tabs */
+  /* Tabs — switch the visible panel */
+  const setActiveTab = (key) => {
+    $$(".tab").forEach(t => {
+      const active = t.dataset.tab === key;
+      t.classList.toggle("active", active);
+      if (active) t.setAttribute("aria-selected", "true");
+      else t.removeAttribute("aria-selected");
+    });
+    $$("[data-tab-panel]").forEach(p => {
+      p.classList.toggle("active", p.dataset.tabPanel === key);
+    });
+  };
+  $$(".tab").forEach(tab => {
+    tab.addEventListener("click", () => setActiveTab(tab.dataset.tab));
+  });
+
+  /* Initial render */
+  seedDemo();
+  renderList("notes");
+  renderList("documents");
+  renderList("links");
+  renderActivity();
+  renderDetails();
+})();
+</script>
+</body>
+</html>
